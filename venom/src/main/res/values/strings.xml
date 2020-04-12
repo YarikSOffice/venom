@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="venom_notification_button_kill">Kill</string>
+    <string name="venom_notification_button_cancel">Cancel</string>
+    <string name="venom_foreground_service_title">Venom Service</string>
+    <string name="venom_foreground_service_text">Running and ready to kill</string>
+</resources>

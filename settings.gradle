@@ -1,0 +1,3 @@
+include ':venom'
+include ':sample'
+rootProject.name = "Venom"
