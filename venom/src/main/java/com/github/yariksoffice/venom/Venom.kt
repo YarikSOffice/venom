@@ -45,7 +45,8 @@ class Venom private constructor(
         private var instance: Venom? = null
 
         fun createInstance(context: Context): Venom {
-            return Venom(context, VenomPreferenceManager(context))
+            val compositionRoot = CompositionRoot.getCompositionRoot(context)
+            return Venom(context, compositionRoot.preferenceManager)
         }
 
         fun setGlobalInstance(venom: Venom) {

@@ -13,8 +13,9 @@ internal class VenomService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        prefs = VenomPreferenceManager(this)
-        notificationManager = VenomNotificationManager(this)
+        val compositionRoot = CompositionRoot.getCompositionRoot(this)
+        prefs = compositionRoot.preferenceManager
+        notificationManager = compositionRoot.notificationManager
         notificationManager.verifyNotificationChannel()
         startForeground(NOTIFICATION_ID, notificationManager.createNotification())
     }
