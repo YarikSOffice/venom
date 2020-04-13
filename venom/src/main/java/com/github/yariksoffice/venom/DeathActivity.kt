@@ -25,6 +25,10 @@ class DeathActivity : Activity() {
         )
     }
 
+    override fun onBackPressed() {
+        // ignore
+    }
+
     companion object {
         private const val DELAY_TIMEOUT_MILLIS = 1000L
 
