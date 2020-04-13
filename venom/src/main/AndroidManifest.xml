@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.yariksoffice.venom">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application>
         <activity android:name=".DeathActivity" />
         <service android:name=".VenomService" />

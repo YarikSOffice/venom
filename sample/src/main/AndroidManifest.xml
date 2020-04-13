@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.yariksoffice.venom">
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
     <application
         android:name=".App"
         android:allowBackup="true"
