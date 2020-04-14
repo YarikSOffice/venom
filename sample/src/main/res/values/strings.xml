@@ -2,5 +2,6 @@
     <string name="app_name">Venom</string>
     <string name="venom_screen_label">Screen # %d</string>
     <string name="next_activity_button">Next Activity</string>
-    <string name="venom_status_label">Run Venom</string>
+    <string name="start_button">Start Venom</string>
+    <string name="stop_button">Stop Venom</string>
 </resources>

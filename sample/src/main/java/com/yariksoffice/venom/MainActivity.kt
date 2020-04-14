@@ -23,14 +23,11 @@ class MainActivity : AppCompatActivity() {
             launch(this, number + 1)
         }
 
-        val switch = findViewById<Switch>(R.id.switch_button)
-        switch.isChecked = venom.isRunning()
-        switch.setOnCheckedChangeListener { _, checked ->
-            if (checked) {
-                venom.start()
-            } else {
-                venom.stop()
-            }
+        findViewById<View>(R.id.start).setOnClickListener {
+            venom.start()
+        }
+        findViewById<View>(R.id.stop).setOnClickListener {
+            venom.stop()
         }
     }
 
