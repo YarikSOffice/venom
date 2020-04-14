@@ -7,7 +7,6 @@ import android.os.IBinder
 internal class VenomService : Service() {
 
     private lateinit var prefs: VenomPreferenceManager
-    private lateinit var notificationManager: VenomNotificationManager
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -15,7 +14,7 @@ internal class VenomService : Service() {
         super.onCreate()
         val compositionRoot = CompositionRoot.getCompositionRoot(this)
         prefs = compositionRoot.preferenceManager
-        notificationManager = compositionRoot.notificationManager
+        val notificationManager = compositionRoot.notificationManager
         notificationManager.verifyNotificationChannel()
         startForeground(NOTIFICATION_ID, notificationManager.createNotification())
     }

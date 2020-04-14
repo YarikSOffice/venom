@@ -30,7 +30,7 @@ class DeathActivity : Activity() {
     }
 
     companion object {
-        private const val DELAY_TIMEOUT_MILLIS = 1000L
+        private const val DELAY_TIMEOUT_MILLIS = 1500L
 
         fun launch(context: Context) {
             val intent = Intent(context, DeathActivity::class.java)
