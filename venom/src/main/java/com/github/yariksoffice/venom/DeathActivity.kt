@@ -8,7 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import kotlin.system.exitProcess
 
-class DeathActivity : Activity() {
+internal class DeathActivity : Activity() {
 
     private val handler = Handler(Looper.getMainLooper())
 
