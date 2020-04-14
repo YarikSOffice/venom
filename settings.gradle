@@ -1,3 +1,4 @@
 include ':venom'
+include ':venom-no-op'
 include ':sample'
 rootProject.name = "Venom"
