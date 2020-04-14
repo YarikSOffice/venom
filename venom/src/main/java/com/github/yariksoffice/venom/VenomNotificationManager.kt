@@ -30,7 +30,7 @@ internal class VenomNotificationManager(private val context: Context) {
         return NotificationCompat.Builder(context, VENOM_NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.android_adb)
             .setContentTitle(context.getString(R.string.venom_foreground_service_title))
-            .setColor(ContextCompat.getColor(context, R.color.primary))
+            .setColor(ContextCompat.getColor(context, R.color.venom_primary))
             .setContentText(context.getString(R.string.venom_foreground_service_text))
             .addAction(cancelAction)
             .addAction(killAction)
