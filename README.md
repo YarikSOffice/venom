@@ -1,6 +1,6 @@
 # Venom
 
-[![](https://jitpack.io/v/YarikSOffice/lingver.svg)](https://jitpack.io/#YarikSOffice/lingver)
+[![](https://jitpack.io/v/YarikSOffice/venom.svg)](https://jitpack.io/#YarikSOffice/venom)
 
 <img src="preview/header.png" width="300">
 
