@@ -43,7 +43,7 @@ class Venom private constructor(
 ) {
 
     /**
-     * Initializes the [Venom] and invalidates its state
+     * Initializes the [Venom] and invalidates its state.
      */
     fun initialize() {
         if (prefs.isActive()) {
@@ -52,7 +52,7 @@ class Venom private constructor(
     }
 
     /**
-     * Starts the [Venom] and puts the notification in the drawer
+     * Starts the [Venom] and puts the notification in the drawer.
      */
     fun start() {
         prefs.setActive(true)
@@ -62,7 +62,7 @@ class Venom private constructor(
     }
 
     /**
-     * Terminates the [Venom] and removes the notification from the drawer
+     * Terminates the [Venom] and removes the notification from the drawer.
      */
     fun stop() {
         prefs.setActive(false)
@@ -70,7 +70,9 @@ class Venom private constructor(
     }
 
     /**
-     * Indicates whether the [Venom] is currently running
+     * Indicates whether the [Venom] is currently running.
+     *
+     * @return true if the [Venom] is currently running
      */
     fun isRunning(): Boolean {
         return prefs.isActive() && isVenomServiceRunning()
@@ -88,7 +90,9 @@ class Venom private constructor(
         private var instance: Venom? = null
 
         /**
-         * Creates a new instance of [Venom]
+         * Creates a new instance of [Venom].
+         *
+         * @param context the [Context] to be used
          */
         fun createInstance(context: Context): Venom {
             val compositionRoot = CompositionRoot.getCompositionRoot(context)
@@ -98,7 +102,9 @@ class Venom private constructor(
         /**
          * Sets the global instance returned from [getGlobalInstance].
          *
-         * throws an [IllegalStateException] if the global instance is already initialized
+         * @param venom the [Venom] instance
+         *
+         * @throws [IllegalStateException] if the global instance is already initialized
          */
         fun setGlobalInstance(venom: Venom) {
             if (instance != null) {
@@ -110,7 +116,7 @@ class Venom private constructor(
         /**
          * Returns the global [Venom] instance set via [setGlobalInstance].
          *
-         * throws an [IllegalStateException] if the global instance is not initialized
+         * @throws [IllegalStateException] if the global instance is not initialized
          */
         fun getGlobalInstance(): Venom {
             return instance ?: throw IllegalStateException("The global instance is not initialized")
