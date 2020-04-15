@@ -30,17 +30,30 @@ import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import java.lang.IllegalStateException
 
+/**
+ * Venom is a lightweight tool that simplifies testing of the process death scenario
+ * for your android application.
+ *
+ * Venom makes it possible to kill the app process from the notification drawer making the testing
+ * easier and more straightforward in comparison with the traditional ways.
+ */
 class Venom private constructor(
     private val context: Context,
     private val prefs: VenomPreferenceManager
 ) {
 
+    /**
+     * Initializes the [Venom] and invalidates its state
+     */
     fun initialize() {
         if (prefs.isActive()) {
             start()
         }
     }
 
+    /**
+     * Starts the [Venom] and puts the notification in the drawer
+     */
     fun start() {
         prefs.setActive(true)
         if (!isVenomServiceRunning()) {
@@ -48,11 +61,17 @@ class Venom private constructor(
         }
     }
 
+    /**
+     * Terminates the [Venom] and removes the notification from the drawer
+     */
     fun stop() {
         prefs.setActive(false)
         context.stopService(Intent(context, VenomService::class.java))
     }
 
+    /**
+     * Indicates whether the [Venom] is currently running
+     */
     fun isRunning(): Boolean {
         return prefs.isActive() && isVenomServiceRunning()
     }
@@ -68,20 +87,33 @@ class Venom private constructor(
 
         private var instance: Venom? = null
 
+        /**
+         * Creates a new instance of [Venom]
+         */
         fun createInstance(context: Context): Venom {
             val compositionRoot = CompositionRoot.getCompositionRoot(context)
             return Venom(context, compositionRoot.preferenceManager)
         }
 
+        /**
+         * Sets the global instance returned from [getGlobalInstance].
+         *
+         * throws an [IllegalStateException] if the global instance is already initialized
+         */
         fun setGlobalInstance(venom: Venom) {
             if (instance != null) {
-                throw IllegalStateException("Global instance is already initialized")
+                throw IllegalStateException("The global instance is already initialized")
             }
             instance = venom
         }
 
+        /**
+         * Returns the global [Venom] instance set via [setGlobalInstance].
+         *
+         * throws an [IllegalStateException] if the global instance is not initialized
+         */
         fun getGlobalInstance(): Venom {
-            return instance ?: throw IllegalStateException("Global instance is not initialized")
+            return instance ?: throw IllegalStateException("The global instance is not initialized")
         }
     }
 }
