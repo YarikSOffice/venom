@@ -4,7 +4,9 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application>
-        <activity android:name=".DeathActivity" />
+        <activity
+            android:name=".DeathActivity"
+            android:theme="@style/VenomDeath" />
         <service android:name=".VenomService" />
     </application>
 

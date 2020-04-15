@@ -3,7 +3,6 @@ package com.github.yariksoffice.venom
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import kotlin.system.exitProcess
@@ -11,11 +10,6 @@ import kotlin.system.exitProcess
 internal class DeathActivity : Activity() {
 
     private val handler = Handler(Looper.getMainLooper())
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.death_activity)
-    }
 
     override fun onResume() {
         super.onResume()

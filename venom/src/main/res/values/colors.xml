@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="venom_primary">#512DA8</color>
-    <color name="venom_death_screen_overlay">#80000000</color>
+    <color name="venom_death_screen_overlay">#404040</color>
 </resources>
