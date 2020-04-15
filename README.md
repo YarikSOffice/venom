@@ -6,9 +6,11 @@
 
 **Venom** is a lightweight tool that simplifies testing of the process death scenario for your android application. 
 
-By default, each Android application runs in a separate process, relinquishing all responsibility for memory and process management to the Android Run Time, which aggressively manages its resources and terminates background applications while the user is away interacting with other apps. In such a case, all the activities instances are destroyed along with application scope objects and background tasks. 
+## Why Venom?
 
-When the user relaunches the app, the top stack activity is restored from the saved instance state. Knowing this, your applications should always present a consistent interface and been tested against the app process death scenario. 
+The Android Run Time aggressively manages its resources and occasionally terminates background applications while the user is away interacting with other apps. In such a case, all the activities are destroyed along with application scope objects and background tasks. 
+
+When the user relaunches the app, the top stack activity is restored from the saved instance state. Knowing this, your applications should always present a consistent interface and be tested against the process death scenario. 
 
 Venom makes it possible to kill the app process from the notification drawer making the testing easier and more straightforward versus the traditional ways like setting the background processes limit in Developer Options or using the stop process button in Android Studio, especially for a QA team.
 
