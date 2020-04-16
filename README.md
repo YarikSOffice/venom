@@ -42,7 +42,8 @@ repositories {
 }
 
 dependencies {
-    implementation "com.github.YarikSOffice:venom:0.1.0"
+    debugImplementation "com.github.YarikSOffice:venom:0.1.0"
+    releaseImplementation "com.github.YarikSOffice:venom-no-op:0.1.0"
 }
 ```
 
