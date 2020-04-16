@@ -22,22 +22,27 @@
  * SOFTWARE.
  */
 
-package com.github.yariksoffice.venom
+package com.github.venom
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 
-internal class CompositionRoot private constructor(context: Context) {
-    val notificationManager = VenomNotificationManager(context)
-    val preferenceManager = VenomPreferenceManager(context)
+internal class VenomPreferenceManager(context: Context) {
+
+    private val preference: SharedPreferences =
+        context.getSharedPreferences(PREFERENCE_NAME, MODE_PRIVATE)
+
+    fun setActive(active: Boolean) {
+        preference.edit().putBoolean(ACTIVE_KEY, active).apply()
+    }
+
+    fun isActive(): Boolean {
+        return preference.getBoolean(ACTIVE_KEY, false)
+    }
 
     companion object {
-        private lateinit var root: CompositionRoot
-
-        fun getCompositionRoot(context: Context): CompositionRoot {
-            if (!::root.isInitialized) {
-                root = CompositionRoot(context)
-            }
-            return root
-        }
+        private const val PREFERENCE_NAME = "venom"
+        private const val ACTIVE_KEY = "active_key"
     }
 }

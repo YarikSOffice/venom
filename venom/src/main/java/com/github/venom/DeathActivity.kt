@@ -22,27 +22,39 @@
  * SOFTWARE.
  */
 
-package com.github.yariksoffice.venom
+package com.github.venom
 
+import android.app.Activity
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
+import android.content.Intent
+import android.os.Handler
+import android.os.Looper
+import kotlin.system.exitProcess
 
-internal class VenomPreferenceManager(context: Context) {
+internal class DeathActivity : Activity() {
 
-    private val preference: SharedPreferences =
-        context.getSharedPreferences(PREFERENCE_NAME, MODE_PRIVATE)
+    private val handler = Handler(Looper.getMainLooper())
 
-    fun setActive(active: Boolean) {
-        preference.edit().putBoolean(ACTIVE_KEY, active).apply()
+    override fun onResume() {
+        super.onResume()
+        handler.postDelayed(
+            { exitProcess(0) },
+            DELAY_TIMEOUT_MILLIS
+        )
     }
 
-    fun isActive(): Boolean {
-        return preference.getBoolean(ACTIVE_KEY, false)
+    override fun onBackPressed() {
+        // ignore
     }
 
     companion object {
-        private const val PREFERENCE_NAME = "venom"
-        private const val ACTIVE_KEY = "active_key"
+        private const val DELAY_TIMEOUT_MILLIS = 1500L
+
+        fun launch(context: Context) {
+            val intent = Intent(context, DeathActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        }
     }
+
 }

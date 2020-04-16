@@ -1,7 +1,7 @@
-package com.yariksoffice.venom
+package com.github.venom.sample
 
 import android.app.Application
-import com.github.yariksoffice.venom.Venom
+import com.github.venom.Venom
 
 class App : Application() {
 
