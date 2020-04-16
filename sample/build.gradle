@@ -28,7 +28,7 @@ apply from: '../common-android.gradle'
 
 android {
     defaultConfig {
-        applicationId "com.yariksoffice.venom"
+        applicationId "com.github.venom.sample"
     }
 }
 

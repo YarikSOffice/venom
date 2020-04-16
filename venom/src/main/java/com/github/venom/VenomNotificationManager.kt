@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.yariksoffice.venom
+package com.github.venom
 
 import android.app.*
 import android.app.Service.NOTIFICATION_SERVICE
@@ -32,8 +32,8 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
 import androidx.core.content.ContextCompat
-import com.github.yariksoffice.venom.VenomService.Companion.ACTION_CANCEL
-import com.github.yariksoffice.venom.VenomService.Companion.ACTION_KILL
+import com.github.venom.VenomService.Companion.ACTION_CANCEL
+import com.github.venom.VenomService.Companion.ACTION_KILL
 
 internal class VenomNotificationManager(private val context: Context) {
 

@@ -1,13 +1,12 @@
-package com.yariksoffice.venom
+package com.github.venom.sample
 
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Switch
 import android.widget.TextView
-import com.github.yariksoffice.venom.Venom
+import com.github.venom.Venom
 
 class MainActivity : AppCompatActivity() {
 

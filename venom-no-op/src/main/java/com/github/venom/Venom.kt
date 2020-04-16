@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.yariksoffice.venom
+package com.github.venom
 
 import android.content.Context
 

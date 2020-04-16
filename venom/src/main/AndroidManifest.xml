@@ -23,7 +23,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.github.yariksoffice.venom">
+    package="com.github.venom">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
