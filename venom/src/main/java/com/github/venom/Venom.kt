@@ -41,11 +41,13 @@ class Venom private constructor(
     private val context: Context,
     private val prefs: VenomPreferenceManager
 ) {
+    private var notification: VenomNotification = VenomNotification.default(context)
 
     /**
      * Initializes the [Venom] and invalidates its state.
      */
-    fun initialize() {
+    fun initialize(customize: VenomNotification.() -> Unit = {}) {
+        notification = notification.apply(customize)
         if (prefs.isActive()) {
             start()
         }
@@ -57,7 +59,7 @@ class Venom private constructor(
     fun start() {
         prefs.setActive(true)
         if (!isVenomServiceRunning()) {
-            context.startService(Intent(context, VenomService::class.java))
+            context.startService(VenomService.newIntent(context, notification))
         }
     }
 

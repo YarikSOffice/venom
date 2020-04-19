@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Venom</string>
+    <string name="app_name">Venom Sample App</string>
     <string name="venom_screen_label">Screen # %d</string>
     <string name="next_activity_button">Next Activity</string>
     <string name="start_button">Start Venom</string>

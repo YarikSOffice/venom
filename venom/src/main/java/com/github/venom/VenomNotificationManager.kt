@@ -48,20 +48,20 @@ internal class VenomNotificationManager(private val context: Context) {
         nm.createNotificationChannel(channel)
     }
 
-    fun createNotification(): Notification {
-        val cancelAction = createAction(ACTION_CANCEL, R.string.venom_notification_button_cancel)
-        val killAction = createAction(ACTION_KILL, R.string.venom_notification_button_kill)
+    fun createNotification(customization: VenomNotification): Notification {
+        val cancelAction = createAction(ACTION_CANCEL, customization.cancelButton)
+        val killAction = createAction(ACTION_KILL, customization.killButton)
         return NotificationCompat.Builder(context, VENOM_NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.android_adb)
-            .setContentTitle(context.getString(R.string.venom_foreground_service_title))
+            .setSmallIcon(customization.smallIconDrawableRes)
+            .setContentTitle(customization.contentTitle)
+            .setContentText(customization.contentText)
             .setColor(ContextCompat.getColor(context, R.color.venom_primary))
-            .setContentText(context.getString(R.string.venom_foreground_service_text))
             .addAction(cancelAction)
             .addAction(killAction)
             .build()
     }
 
-    private fun createAction(action: String, text: Int): Action {
+    private fun createAction(action: String, text: String): Action {
         val intent = Intent(context, VenomService::class.java).setAction(action)
         val pendingIntent = PendingIntent.getService(
             context, 0, intent,
@@ -69,7 +69,7 @@ internal class VenomNotificationManager(private val context: Context) {
         )
         return Action(
             R.drawable.android_adb,
-            context.getString(text),
+            text,
             pendingIntent
         )
     }

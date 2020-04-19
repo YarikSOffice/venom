@@ -25,12 +25,15 @@
 package com.github.venom
 
 import android.app.*
+import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.os.IBinder
 
 internal class VenomService : Service() {
 
     private lateinit var prefs: VenomPreferenceManager
+    private lateinit var notificationManager: VenomNotificationManager
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -38,17 +41,23 @@ internal class VenomService : Service() {
         super.onCreate()
         val compositionRoot = CompositionRoot.getCompositionRoot(this)
         prefs = compositionRoot.preferenceManager
-        val notificationManager = compositionRoot.notificationManager
+        notificationManager = compositionRoot.notificationManager
         notificationManager.verifyNotificationChannel()
-        startForeground(NOTIFICATION_ID, notificationManager.createNotification())
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_CANCEL -> cancelAndTerminate()
             ACTION_KILL -> launchDeath()
+            else -> intent?.extras?.let(::showNotification)
         }
         return START_NOT_STICKY
+    }
+
+    private fun showNotification(extras: Bundle) {
+        val notificationResources = requireNotNull(extras.getParcelable<VenomNotification>(NOTIFICATION_RESOURCES_EXTRA))
+        val notification = notificationManager.createNotification(notificationResources)
+        startForeground(NOTIFICATION_ID, notification)
     }
 
     private fun launchDeath() {
@@ -63,7 +72,13 @@ internal class VenomService : Service() {
 
     companion object {
         private const val NOTIFICATION_ID = 200
+        private const val NOTIFICATION_RESOURCES_EXTRA = "NOTIFICATION_RESOURCES_EXTRA"
         const val ACTION_KILL = "action_kill"
         const val ACTION_CANCEL = "action_cancel"
+
+        fun newIntent(context: Context, notification: VenomNotification): Intent {
+            return Intent(context, VenomService::class.java)
+                .putExtra(NOTIFICATION_RESOURCES_EXTRA, notification)
+        }
     }
 }
