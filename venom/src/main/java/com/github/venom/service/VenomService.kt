@@ -22,11 +22,14 @@
  * SOFTWARE.
  */
 
-package com.github.venom
+package com.github.venom.service
 
 import android.app.*
 import android.content.Intent
 import android.os.IBinder
+import com.github.venom.CompositionRoot
+import com.github.venom.DeathActivity
+import com.github.venom.VenomPreferenceManager
 
 internal class VenomService : Service() {
 

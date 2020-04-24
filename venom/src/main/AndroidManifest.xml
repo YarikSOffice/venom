@@ -31,7 +31,7 @@
         <activity
             android:name=".DeathActivity"
             android:theme="@style/VenomDeath" />
-        <service android:name=".VenomService" />
+        <service android:name=".service.VenomService" />
     </application>
 
 </manifest>

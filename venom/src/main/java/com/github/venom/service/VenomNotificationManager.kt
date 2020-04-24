@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.venom
+package com.github.venom.service
 
 import android.app.*
 import android.app.Service.NOTIFICATION_SERVICE
@@ -32,10 +32,12 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
 import androidx.core.content.ContextCompat
-import com.github.venom.VenomService.Companion.ACTION_CANCEL
-import com.github.venom.VenomService.Companion.ACTION_KILL
+import com.github.venom.service.VenomService.Companion.ACTION_CANCEL
+import com.github.venom.service.VenomService.Companion.ACTION_KILL
 
 internal class VenomNotificationManager(private val context: Context) {
+
+    var config: NotificationConfig = defaultNotification(context)
 
     fun verifyNotificationChannel() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
@@ -49,29 +51,23 @@ internal class VenomNotificationManager(private val context: Context) {
     }
 
     fun createNotification(): Notification {
-        val cancelAction = createAction(ACTION_CANCEL, R.string.venom_notification_button_cancel)
-        val killAction = createAction(ACTION_KILL, R.string.venom_notification_button_kill)
         return NotificationCompat.Builder(context, VENOM_NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.android_adb)
-            .setContentTitle(context.getString(R.string.venom_foreground_service_title))
-            .setColor(ContextCompat.getColor(context, R.color.venom_primary))
-            .setContentText(context.getString(R.string.venom_foreground_service_text))
-            .addAction(cancelAction)
-            .addAction(killAction)
+            .setContentTitle(config.title)
+            .setContentText(config.text)
+            .setSmallIcon(config.iconRes)
+            .setColor(ContextCompat.getColor(context, config.colorRes))
+            .addAction(createAction(ACTION_CANCEL, config.buttonCancel))
+            .addAction(createAction(ACTION_KILL, config.buttonKill))
             .build()
     }
 
-    private fun createAction(action: String, text: Int): Action {
+    private fun createAction(action: String, text: String): Action {
         val intent = Intent(context, VenomService::class.java).setAction(action)
         val pendingIntent = PendingIntent.getService(
             context, 0, intent,
             PendingIntent.FLAG_ONE_SHOT
         )
-        return Action(
-            R.drawable.android_adb,
-            context.getString(text),
-            pendingIntent
-        )
+        return Action(0, text, pendingIntent)
     }
 
     companion object {

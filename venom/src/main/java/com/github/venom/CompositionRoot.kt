@@ -25,10 +25,13 @@
 package com.github.venom
 
 import android.content.Context
+import com.github.venom.service.ServiceDelegate
+import com.github.venom.service.VenomNotificationManager
 
 internal class CompositionRoot private constructor(context: Context) {
     val notificationManager = VenomNotificationManager(context)
     val preferenceManager = VenomPreferenceManager(context)
+    val serviceDelegate = ServiceDelegate(context)
 
     companion object {
         private lateinit var root: CompositionRoot
