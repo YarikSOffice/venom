@@ -24,11 +24,10 @@
 
 package com.github.venom
 
-import android.app.ActivityManager
 import android.content.Context
-import android.content.Context.ACTIVITY_SERVICE
-import android.content.Intent
-import java.lang.IllegalStateException
+import com.github.venom.service.NotificationConfig
+import com.github.venom.service.ServiceDelegate
+import com.github.venom.service.VenomNotificationManager
 
 /**
  * Venom is a lightweight tool that simplifies testing of the process death scenario
@@ -38,14 +37,17 @@ import java.lang.IllegalStateException
  * easier and more straightforward in comparison with the traditional ways.
  */
 class Venom private constructor(
-    private val context: Context,
-    private val prefs: VenomPreferenceManager
+    private val prefs: VenomPreferenceManager,
+    private val notificationManager: VenomNotificationManager,
+    private val delegate: ServiceDelegate
 ) {
 
     /**
      * Initializes the [Venom] and invalidates its state.
      */
-    fun initialize() {
+    @JvmOverloads
+    fun initialize(config: NotificationConfig? = null) {
+        config?.let { notificationManager.config = it }
         if (prefs.isActive()) {
             start()
         }
@@ -56,9 +58,7 @@ class Venom private constructor(
      */
     fun start() {
         prefs.setActive(true)
-        if (!isVenomServiceRunning()) {
-            context.startService(Intent(context, VenomService::class.java))
-        }
+        delegate.startService()
     }
 
     /**
@@ -66,7 +66,7 @@ class Venom private constructor(
      */
     fun stop() {
         prefs.setActive(false)
-        context.stopService(Intent(context, VenomService::class.java))
+        delegate.stopService()
     }
 
     /**
@@ -75,14 +75,7 @@ class Venom private constructor(
      * @return true if the [Venom] is currently running
      */
     fun isRunning(): Boolean {
-        return prefs.isActive() && isVenomServiceRunning()
-    }
-
-    @Suppress("DEPRECATION")
-    private fun isVenomServiceRunning(): Boolean {
-        val manager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        return manager.getRunningServices(Integer.MAX_VALUE)
-            .any { it.service.className == VenomService::class.java.name }
+        return delegate.isServiceRunning()
     }
 
     companion object {
@@ -95,8 +88,8 @@ class Venom private constructor(
          * @param context the [Context] to be used
          */
         fun createInstance(context: Context): Venom {
-            val compositionRoot = CompositionRoot.getCompositionRoot(context)
-            return Venom(context, compositionRoot.preferenceManager)
+            val root = CompositionRoot.getCompositionRoot(context)
+            return Venom(root.preferenceManager, root.notificationManager, root.serviceDelegate)
         }
 
         /**
@@ -121,5 +114,11 @@ class Venom private constructor(
         fun getGlobalInstance(): Venom {
             return instance ?: throw IllegalStateException("The global instance is not initialized")
         }
+
+        internal fun createInstance(
+            prefs: VenomPreferenceManager,
+            notificationManager: VenomNotificationManager,
+            delegate: ServiceDelegate
+        ): Venom = Venom(prefs, notificationManager, delegate)
     }
 }
