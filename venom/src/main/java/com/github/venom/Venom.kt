@@ -87,6 +87,7 @@ class Venom private constructor(
          *
          * @param context the [Context] to be used
          */
+        @JvmStatic
         fun createInstance(context: Context): Venom {
             val root = CompositionRoot.getCompositionRoot(context)
             return Venom(root.preferenceManager, root.notificationManager, root.serviceDelegate)
@@ -99,6 +100,7 @@ class Venom private constructor(
          *
          * @throws [IllegalStateException] if the global instance is already initialized
          */
+        @JvmStatic
         fun setGlobalInstance(venom: Venom) {
             if (instance != null) {
                 throw IllegalStateException("The global instance is already initialized")
@@ -111,6 +113,7 @@ class Venom private constructor(
          *
          * @throws [IllegalStateException] if the global instance is not initialized
          */
+        @JvmStatic
         fun getGlobalInstance(): Venom {
             return instance ?: throw IllegalStateException("The global instance is not initialized")
         }
