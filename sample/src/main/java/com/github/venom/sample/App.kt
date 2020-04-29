@@ -11,8 +11,8 @@ class App : Application() {
         val venom = Venom.createInstance(this)
 
         val notification = NotificationConfig.Builder(this)
-            .buttonCancel(R.string.venom_notification_button_cancel)
-            .buttonKill(getString(R.string.venom_notification_button_kill))
+            .buttonCancel(R.string.venom_notification_button_cancel_override)
+            .buttonKill(getString(R.string.venom_notification_button_kill_override))
             .build()
         venom.initialize(notification)
         Venom.setGlobalInstance(venom)

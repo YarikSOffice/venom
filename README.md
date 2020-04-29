@@ -20,23 +20,35 @@ The setup is pretty simple:
 
 1. Initialize the library in Application.onCreate:
 
-``` kotlin
+```kotlin
 val venom = Venom.createInstance(this)
 venom.initialize()
 ```
 
 2. Call `start`/`stop` whenever you need:
 
-``` kotlin
+```kotlin
 venom.start()
 // or
 venom.stop()
 ```
 See the sample app for an example.
 
+## Customize the notification
+
+Use the builder to customize the notification:
+```kotlin
+val notification = NotificationConfig.Builder(this)
+    .buttonCancel(R.string.venom_notification_button_cancel_override)
+    .buttonKill(getString(R.string.venom_notification_button_kill_override))
+    .build()   
+venom.initialize(notification)
+```
+
+
 ## Download
 
-``` groovy
+```groovy
 repositories {
     maven { url 'https://jitpack.io' }
 }
