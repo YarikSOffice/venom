@@ -25,10 +25,12 @@
 package com.github.venom
 
 import android.content.Context
+import com.github.venom.service.NotificationConfig
 
 class Venom private constructor() {
 
-    fun initialize() {}
+    @JvmOverloads
+    fun initialize(config: NotificationConfig? = null) {}
 
     fun start() {}
 
@@ -38,10 +40,13 @@ class Venom private constructor() {
 
     companion object {
 
+        @JvmStatic
         fun createInstance(ignored: Context) = Venom()
 
+        @JvmStatic
         fun setGlobalInstance(ignored: Venom) {}
 
+        @JvmStatic
         fun getGlobalInstance() = Venom()
     }
 }
