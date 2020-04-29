@@ -4,4 +4,6 @@
     <string name="next_activity_button">Next Activity</string>
     <string name="start_button">Start Venom</string>
     <string name="stop_button">Stop Venom</string>
+    <string name="venom_notification_button_kill_override">Kill</string>
+    <string name="venom_notification_button_cancel_override">Cancel</string>
 </resources>
