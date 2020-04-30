@@ -2,10 +2,11 @@ package com.github.venom.sample
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Process
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.github.venom.Venom
 
 class MainActivity : AppCompatActivity() {
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         val venom = Venom.getGlobalInstance()
         val number = intent.getIntExtra(NUMBER_ARG, 1)
 
+        findViewById<TextView>(R.id.pid).text = getString(R.string.pid, Process.myPid())
         findViewById<TextView>(R.id.label).text = getString(R.string.venom_screen_label, number)
         findViewById<View>(R.id.next_activity).setOnClickListener {
             launch(this, number + 1)
