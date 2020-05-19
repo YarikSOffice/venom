@@ -31,8 +31,8 @@ import android.os.Bundle
 
 class VenomTestActivity : Activity() {
 
-    private var longTermStop: Boolean = false
-    private var longTermSaveState: Boolean = false
+    private var longStop: Boolean = false
+    private var longSaveState: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,51 +40,51 @@ class VenomTestActivity : Activity() {
         val countLeft = intent.getIntExtra(COUNT_LEFT_ARG, 0)
         title = TITLE_PREFIX + countLeft
 
-        val topLongTermStop = intent.getBooleanExtra(TOP_LONG_TERM_STOP_ARG, false)
-        val topLongTermSaveState = intent.getBooleanExtra(TOP_LONG_TERM_SAVE_STATE_ARG, false)
+        val topLongStop = intent.getBooleanExtra(TOP_LONG_STOP_ARG, false)
+        val topLongSaveState = intent.getBooleanExtra(TOP_LONG_SAVE_STATE_ARG, false)
 
         if (countLeft == 0) {
-            longTermStop = topLongTermStop
-            longTermSaveState = topLongTermSaveState
+            longStop = topLongStop
+            longSaveState = topLongSaveState
         } else {
             val intent = launchIntent(
                 context = this,
                 countLeft = countLeft - 1,
-                topActivityLongTermStop = topLongTermStop,
-                topActivityLongTermSaveSate = topLongTermSaveState
+                topActivityLongStop = topLongStop,
+                topActivityLongSaveSate = topLongSaveState
             )
             startActivity(intent)
         }
     }
 
     override fun onStop() {
-        if (longTermStop) Thread.sleep(LONG_TERM_TASK_TIME_MILLIS)
+        if (longStop) Thread.sleep(LONG_TASK_TIME_MILLIS)
         super.onStop()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        if (longTermSaveState) Thread.sleep(LONG_TERM_TASK_TIME_MILLIS)
+        if (longSaveState) Thread.sleep(LONG_TASK_TIME_MILLIS)
         super.onSaveInstanceState(outState)
     }
 
     companion object {
         private const val COUNT_LEFT_ARG = "count left"
-        private const val TOP_LONG_TERM_STOP_ARG = "top activity long-term stop"
-        private const val TOP_LONG_TERM_SAVE_STATE_ARG = "top activity long-term save state"
-        private const val LONG_TERM_TASK_TIME_MILLIS = 5000L
+        private const val TOP_LONG_STOP_ARG = "top activity long stop"
+        private const val TOP_LONG_SAVE_STATE_ARG = "top activity long save state"
+        private const val LONG_TASK_TIME_MILLIS = 5000L
 
         const val TITLE_PREFIX = "Activity #"
 
         fun launchIntent(
             context: Context,
-            countLeft: Int = 0,
-            topActivityLongTermStop: Boolean = false,
-            topActivityLongTermSaveSate: Boolean = false
+            countLeft: Int,
+            topActivityLongStop: Boolean,
+            topActivityLongSaveSate: Boolean
         ): Intent {
             return Intent(context, VenomTestActivity::class.java)
                 .putExtra(COUNT_LEFT_ARG, countLeft)
-                .putExtra(TOP_LONG_TERM_STOP_ARG, topActivityLongTermStop)
-                .putExtra(TOP_LONG_TERM_SAVE_STATE_ARG, topActivityLongTermSaveSate)
+                .putExtra(TOP_LONG_STOP_ARG, topActivityLongStop)
+                .putExtra(TOP_LONG_SAVE_STATE_ARG, topActivityLongSaveSate)
         }
     }
 }
