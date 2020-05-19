@@ -28,63 +28,56 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import java.io.Serializable
 
 class VenomTestActivity : Activity() {
 
-    private var longStop: Boolean = false
-    private var longSaveState: Boolean = false
+    private lateinit var arg: InputArg
+    private var processedInput = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        processedInput = savedInstanceState?.getBoolean(PROCESSED_INPUT_KEY) ?: false
 
-        val countLeft = intent.getIntExtra(COUNT_LEFT_ARG, 0)
-        title = TITLE_PREFIX + countLeft
+        arg = intent.getSerializableExtra(INPUT_ARG) as InputArg
+        title = TITLE_PREFIX + arg.number
 
-        val topLongStop = intent.getBooleanExtra(TOP_LONG_STOP_ARG, false)
-        val topLongSaveState = intent.getBooleanExtra(TOP_LONG_SAVE_STATE_ARG, false)
-
-        if (countLeft == 0) {
-            longStop = topLongStop
-            longSaveState = topLongSaveState
-        } else {
-            val intent = launchIntent(
-                context = this,
-                countLeft = countLeft - 1,
-                topActivityLongStop = topLongStop,
-                topActivityLongSaveSate = topLongSaveState
-            )
-            startActivity(intent)
+        val args = arg.args
+        if (!processedInput && !args.isNullOrEmpty()) {
+            processedInput = true
+            val intents = args.map { launchIntent(this, it) }
+            startActivities(intents.toTypedArray())
         }
     }
 
     override fun onStop() {
-        if (longStop) Thread.sleep(LONG_TASK_TIME_MILLIS)
+        if (arg.longStop) Thread.sleep(LONG_TASK_TIME_MILLIS)
         super.onStop()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        if (longSaveState) Thread.sleep(LONG_TASK_TIME_MILLIS)
+        if (arg.longSaveSate) Thread.sleep(LONG_TASK_TIME_MILLIS)
+        outState.putBoolean(PROCESSED_INPUT_KEY, processedInput)
         super.onSaveInstanceState(outState)
     }
 
     companion object {
-        private const val COUNT_LEFT_ARG = "count left"
-        private const val TOP_LONG_STOP_ARG = "top activity long stop"
-        private const val TOP_LONG_SAVE_STATE_ARG = "top activity long save state"
+        private const val INPUT_ARG = "input"
+        private const val PROCESSED_INPUT_KEY = "processed input"
         private const val LONG_TASK_TIME_MILLIS = 5000L
 
         const val TITLE_PREFIX = "Activity #"
 
-        fun launchIntent(
-            context: Context,
-            countLeft: Int,
-            topActivityLongStop: Boolean,
-            topActivityLongSaveSate: Boolean
-        ): Intent {
+        data class InputArg(
+            val number: Int,
+            val longStop: Boolean,
+            val longSaveSate: Boolean,
+            val args: ArrayList<InputArg>? = null
+        ) : Serializable
+
+        fun launchIntent(context: Context, arg: InputArg): Intent {
             return Intent(context, VenomTestActivity::class.java)
-                .putExtra(COUNT_LEFT_ARG, countLeft)
-                .putExtra(TOP_LONG_STOP_ARG, topActivityLongStop)
-                .putExtra(TOP_LONG_SAVE_STATE_ARG, topActivityLongSaveSate)
+                .putExtra(INPUT_ARG, arg)
         }
     }
 }
