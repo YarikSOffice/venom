@@ -66,9 +66,10 @@ class ServiceDelegateTest {
         serviceInfo.service = mockk {
             every { className } returns if (running) VenomService::class.java.name else ""
         }
-        every { context.getSystemService(ACTIVITY_SERVICE) } returns
-                mockk<ActivityManager> {
-                    every { getRunningServices(any()) } returns listOf(serviceInfo)
-                }
+        every {
+            context.getSystemService(ACTIVITY_SERVICE)
+        } returns mockk<ActivityManager> {
+            every { getRunningServices(any()) } returns listOf(serviceInfo)
+        }
     }
 }

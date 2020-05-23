@@ -25,7 +25,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply from: '../common-android.gradle'
+apply from: '../static-analysis.gradle'
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }

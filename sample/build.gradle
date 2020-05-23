@@ -24,6 +24,7 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply from: '../static-analysis.gradle'
 apply from: '../common-android.gradle'
 
 android {
@@ -35,7 +36,7 @@ android {
 dependencies {
     debugImplementation project(":venom")
     releaseImplementation project(":venom-no-op")
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 }
