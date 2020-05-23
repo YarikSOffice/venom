@@ -41,7 +41,7 @@ internal class DeathActivity : Activity() {
     }
 
     override fun onBackPressed() {
-        // ignore
+        // No-op
     }
 
     /**
@@ -100,11 +100,21 @@ internal class DeathActivity : Activity() {
             handler.post { handler.post(venomousRunnable) }
         }
 
-        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-        override fun onActivityStarted(activity: Activity) {}
-        override fun onActivityPaused(activity: Activity) {}
-        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-        override fun onActivityDestroyed(activity: Activity) {}
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+            // No-op
+        }
+        override fun onActivityStarted(activity: Activity) {
+            // No-op
+        }
+        override fun onActivityPaused(activity: Activity) {
+            // No-op
+        }
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+            // No-op
+        }
+        override fun onActivityDestroyed(activity: Activity) {
+            // No-op
+        }
     }
 
     companion object {
@@ -116,5 +126,4 @@ internal class DeathActivity : Activity() {
             context.startActivity(intent)
         }
     }
-
 }

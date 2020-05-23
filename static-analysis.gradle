@@ -22,40 +22,22 @@
  * SOFTWARE.
  */
 
-package com.github.venom
+apply plugin: "io.gitlab.arturbosch.detekt"
+apply plugin: "org.jlleitschuh.gradle.ktlint"
 
-import android.content.Context
-import com.github.venom.service.NotificationConfig
-
-class Venom private constructor() {
-
-    @JvmOverloads
-    fun initialize(config: NotificationConfig? = null) {
-        // No-op
+android {
+    lintOptions {
+        warningsAsErrors true
+        abortOnError true
     }
+}
 
-    fun start() {
-        // No-op
-    }
+ktlint {
+    version = rootProject.ext.ktlintVersion
+    enableExperimentalRules = true
+}
 
-    fun stop() {
-        // No-op
-    }
-
-    @Suppress("FunctionOnlyReturningConstant")
-    fun isRunning() = false
-
-    companion object {
-
-        @JvmStatic
-        fun createInstance(ignored: Context) = Venom()
-
-        @JvmStatic
-        fun setGlobalInstance(ignored: Venom) {
-            // No-op
-        }
-
-        @JvmStatic
-        fun getGlobalInstance() = Venom()
-    }
+detekt {
+    config = files("../detekt-config.yml")
+    buildUponDefaultConfig = true
 }

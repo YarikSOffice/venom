@@ -24,14 +24,15 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply from: '../static-analysis.gradle'
 apply from: '../common-android.gradle'
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.core:core:1.2.0"
-    testImplementation "junit:junit:4.13"
-    testImplementation "io.mockk:mockk:1.9.3"
-    androidTestImplementation "androidx.test:runner:1.2.0"
-    androidTestImplementation "androidx.test.ext:junit:1.1.1"
-    androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    implementation "androidx.core:core:$androidXCoreVersion"
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
+    androidTestImplementation "androidx.test:runner:$androidXTestVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidXTestExtVersion"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:$uiAutomatorVersion"
 }
