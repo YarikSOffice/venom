@@ -1,6 +1,9 @@
 # Venom
 
 [![](https://jitpack.io/v/YarikSOffice/venom.svg)](https://jitpack.io/#YarikSOffice/venom)
+[![](https://github.com/YarikSOffice/venom/workflows/Build/badge.svg)](https://github.com/YarikSOffice/venom/actions?query=workflow%3ABuild)
+[![](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io/)
+[![](https://androidweekly.net/issues/issue-411/badge.svg)](https://androidweekly.net/issues/issue-411/)
 
 <img src="preview/header.png" width="300">
 
