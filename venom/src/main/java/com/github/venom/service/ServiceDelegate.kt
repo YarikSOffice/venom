@@ -1,6 +1,5 @@
 package com.github.venom.service
 
-
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
