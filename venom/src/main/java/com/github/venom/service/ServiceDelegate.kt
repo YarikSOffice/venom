@@ -1,19 +1,16 @@
 package com.github.venom.service
 
+
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import androidx.core.content.ContextCompat
 
 internal class ServiceDelegate(private val context: Context) {
 
     fun startService() {
         if (!isServiceRunning()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(Intent(context, VenomService::class.java))
-            } else {
-                context.startService(Intent(context, VenomService::class.java))
-            }
+            ContextCompat.startForegroundService(context, Intent(context, VenomService::class.java))
         }
     }
 
