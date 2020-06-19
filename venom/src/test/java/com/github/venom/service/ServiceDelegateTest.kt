@@ -28,7 +28,13 @@ class ServiceDelegateTest {
         setRunningState(false)
         delegate.startService()
         // it's not possible to verify the Intent unfortunately
-        verify { context.startForegroundService(any()) }
+        verify {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(any())
+            } else {
+                context.startService(any())
+            }
+        }
     }
 
     @Test
@@ -36,7 +42,13 @@ class ServiceDelegateTest {
         setRunningState(true)
         delegate.startService()
 
-        verify(exactly = 0) { context.startForegroundService(any()) }
+        verify(exactly = 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(any())
+            } else {
+                context.startService(any())
+            }
+        }
     }
 
     @Test
