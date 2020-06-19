@@ -1,9 +1,9 @@
 package com.github.venom.service
 
 import android.app.ActivityManager
-import android.os.Build
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 
 internal class ServiceDelegate(private val context: Context) {
 
