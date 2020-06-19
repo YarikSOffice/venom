@@ -28,7 +28,7 @@ class ServiceDelegateTest {
         setRunningState(false)
         delegate.startService()
         // it's not possible to verify the Intent unfortunately
-        verify { context.startService(any()) }
+        verify { context.startForegroundService(any()) }
     }
 
     @Test
@@ -36,7 +36,7 @@ class ServiceDelegateTest {
         setRunningState(true)
         delegate.startService()
 
-        verify(exactly = 0) { context.startService(any()) }
+        verify(exactly = 0) { context.startForegroundService(any()) }
     }
 
     @Test
