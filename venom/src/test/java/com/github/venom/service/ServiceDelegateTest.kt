@@ -4,7 +4,7 @@ import android.app.ActivityManager
 import android.app.ActivityManager.RunningServiceInfo
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
-import android.os.Build
+import androidx.core.content.ContextCompat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -29,13 +29,7 @@ class ServiceDelegateTest {
         setRunningState(false)
         delegate.startService()
         // it's not possible to verify the Intent unfortunately
-        verify {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(any())
-            } else {
-                context.startService(any())
-            }
-        }
+        verify { ContextCompat.startForegroundService(any(), any()) }
     }
 
     @Test
@@ -43,13 +37,7 @@ class ServiceDelegateTest {
         setRunningState(true)
         delegate.startService()
 
-        verify(exactly = 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(any())
-            } else {
-                context.startService(any())
-            }
-        }
+        verify(exactly = 0) { ContextCompat.startForegroundService(any(), any()) }
     }
 
     @Test
