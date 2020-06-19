@@ -4,6 +4,7 @@ import android.app.ActivityManager
 import android.app.ActivityManager.RunningServiceInfo
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
+import android.os.Build
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
