@@ -8,7 +8,11 @@ internal class ServiceDelegate(private val context: Context) {
 
     fun startService() {
         if (!isServiceRunning()) {
-            context.startForegroundService(Intent(context, VenomService::class.java))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(Intent(context, VenomService::class.java))
+            } else {
+                context.startService(Intent(context, VenomService::class.java))
+            }
         }
     }
 
