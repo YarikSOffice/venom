@@ -28,7 +28,8 @@ class ServiceDelegateTest {
     @Test
     fun startService_startServiceIfNotRunning() {
         setRunningState(false)
-        mockkStatic(androidx.core.content.ContextCompat::class) {
+
+        mockkStatic(ContextCompat::class) {
             delegate.startService()
             // it's not possible to verify the Intent unfortunately
             verify { ContextCompat.startForegroundService(any(), any()) }
@@ -38,7 +39,8 @@ class ServiceDelegateTest {
     @Test
     fun startService_dontStartServiceIfAlreadyRunning() {
         setRunningState(true)
-        mockkStatic(androidx.core.content.ContextCompat::class) {
+
+        mockkStatic(ContextCompat::class) {
             delegate.startService()
             verify(exactly = 0) { ContextCompat.startForegroundService(any(), any()) }
         }
