@@ -4,8 +4,10 @@ import android.app.ActivityManager
 import android.app.ActivityManager.RunningServiceInfo
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
+import androidx.core.content.ContextCompat
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.verify
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -26,17 +28,22 @@ class ServiceDelegateTest {
     @Test
     fun startService_startServiceIfNotRunning() {
         setRunningState(false)
-        delegate.startService()
-        // it's not possible to verify the Intent unfortunately
-        verify { context.startService(any()) }
+
+        mockkStatic(ContextCompat::class) {
+            delegate.startService()
+            // it's not possible to verify the Intent unfortunately
+            verify { ContextCompat.startForegroundService(any(), any()) }
+        }
     }
 
     @Test
     fun startService_dontStartServiceIfAlreadyRunning() {
         setRunningState(true)
-        delegate.startService()
 
-        verify(exactly = 0) { context.startService(any()) }
+        mockkStatic(ContextCompat::class) {
+            delegate.startService()
+            verify(exactly = 0) { ContextCompat.startForegroundService(any(), any()) }
+        }
     }
 
     @Test
