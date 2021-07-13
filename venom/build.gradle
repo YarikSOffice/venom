@@ -29,7 +29,7 @@ apply from: '../common-android.gradle'
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation "androidx.core:core:$androidXCoreVersion"
+    implementation "androidx.core:core-ktx:$androidXCoreVersion"
     testImplementation "junit:junit:$junitVersion"
     testImplementation "io.mockk:mockk:$mockkVersion"
     androidTestImplementation "androidx.test:runner:$androidXTestVersion"
