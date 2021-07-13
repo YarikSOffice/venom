@@ -36,3 +36,13 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidXTestExtVersion"
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$uiAutomatorVersion"
 }
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+            }
+        }
+    }
+}
