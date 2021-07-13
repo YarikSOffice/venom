@@ -67,7 +67,9 @@ internal class VenomNotificationManager(private val context: Context) {
     private fun createAction(action: String, text: String): Action {
         val intent = Intent(context, VenomService::class.java).setAction(action)
         val pendingIntent = PendingIntent.getService(
-            context, 0, intent,
+            context,
+            0,
+            intent,
             PendingIntent.FLAG_ONE_SHOT
         )
         return Action(0, text, pendingIntent)
