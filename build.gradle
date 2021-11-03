@@ -31,7 +31,7 @@ buildscript {
         ktlintGradleVersion = "10.1.0"
 
         appCompatVersion = "1.3.1"
-        androidXCoreVersion = "1.6.0"
+        androidXCoreVersion = "1.7.0"
         constraintLayoutVersion = "2.1.1"
 
         junitVersion = "4.13.2"
