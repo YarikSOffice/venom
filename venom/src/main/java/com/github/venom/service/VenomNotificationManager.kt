@@ -66,15 +66,19 @@ internal class VenomNotificationManager(private val context: Context) {
 
     private fun createAction(action: String, text: String): Action {
         val intent = Intent(context, VenomService::class.java).setAction(action)
+        val intentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_ONE_SHOT
+        }
         val pendingIntent = PendingIntent.getService(
             context,
             0,
             intent,
-            PendingIntent.FLAG_ONE_SHOT
+            intentFlags
         )
         return Action(0, text, pendingIntent)
     }
-
     companion object {
         private const val VENOM_NOTIFICATION_CHANNEL_ID = "venom_notification_channel"
         private const val VENOM_NOTIFICATION_CHANNEL_NAME = "Venom"

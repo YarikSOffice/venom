@@ -41,8 +41,8 @@ buildscript {
         uiAutomatorVersion = "2.2.0"
 
         minSdkVersion = 14
-        targetSdkVersion = 30
-        compileSdkVersion = 30
+        targetSdkVersion = 31
+        compileSdkVersion = 31
         versionName = "0.4.1"
     }
     repositories {
