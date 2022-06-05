@@ -38,6 +38,11 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 
+      - name: Configure JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
       - name: Run all device checks
         uses: reactivecircus/android-emulator-runner@v2
         with:
