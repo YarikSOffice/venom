@@ -28,7 +28,7 @@ package com.github.venom.service
 
 import android.content.Context
 
-@Suppress("DataClassPrivateConstructor")
+@Suppress("DataClassPrivateConstructor", "UNUSED_PARAMETER")
 data class NotificationConfig private constructor(
     val title: String,
     val text: String,
