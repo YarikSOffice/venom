@@ -29,9 +29,10 @@
 
     <application>
         <activity
-            android:name=".DeathActivity"
-            android:theme="@style/VenomDeath" />
-        <service android:name=".service.VenomService" />
+            android:name=".VenomActivity"
+            android:theme="@style/VenomDeath"
+            android:taskAffinity="com.github.venom.kill"
+            android:excludeFromRecents="true" />
     </application>
 
 </manifest>

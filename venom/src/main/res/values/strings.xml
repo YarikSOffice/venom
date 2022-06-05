@@ -24,6 +24,7 @@
 
 <resources>
     <string name="venom_notification_button_kill">Kill</string>
+    <string name="venom_notification_button_restart">Restart</string>
     <string name="venom_notification_button_cancel">Cancel</string>
     <string name="venom_foreground_service_title">Venom Service</string>
     <string name="venom_foreground_service_text">Running and ready to kill</string>

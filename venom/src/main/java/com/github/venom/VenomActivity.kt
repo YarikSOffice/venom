@@ -33,7 +33,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Process
 
-internal class DeathActivity : Activity() {
+internal class VenomActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,11 +55,11 @@ internal class DeathActivity : Activity() {
      *
      * Our goal is to restore the same back stack once the app is recreated. To achieve this,
      * we kill the process as soon as:
-     * 1. [DeathActivity] is resumed - to remove it from the stack.
+     * 1. [VenomActivity] is resumed - to remove it from the stack.
      * 2. The activity manager service gets the last saved state of the activities that
      * haven't stopped yet - to keep them in the stack.
      *
-     * When [DeathActivity] is being resumed we schedule a suicide attempt with a delay.
+     * When [VenomActivity] is being resumed we schedule a suicide attempt with a delay.
      * This delay is long enough to check if there are any activities that haven't stopped yet.
      * In case we have them, we postpone the suicide until the activity manager service gets
      * the last saved state of such the activities.
@@ -71,15 +71,15 @@ internal class DeathActivity : Activity() {
         /** Kills the app process. */
         private val venomousRunnable = Runnable { Process.killProcess(Process.myPid()) }
 
-        /** Schedules the suicide with a delay when [DeathActivity] resumes. */
+        /** Schedules the suicide with a delay when [VenomActivity] resumes. */
         override fun onActivityResumed(activity: Activity) {
-            if (activity !is DeathActivity) return
+            if (activity !is VenomActivity) return
             handler.postDelayed(venomousRunnable, DELAY_TIMEOUT_MILLIS)
         }
 
         /**
          * Postpones the suicide until the activity manager service gets the last saved state
-         * of every stopping activity except [DeathActivity].
+         * of every stopping activity except [VenomActivity].
          *
          * The Android framework stops an activity in the following steps:
          * 1. Invokes [onStop] and [onSaveInstanceState] methods along with associated
@@ -94,7 +94,7 @@ internal class DeathActivity : Activity() {
          * 2. We post the inner runnable which is guaranteed to be processed after the *Report*.
          **/
         override fun onActivityStopped(activity: Activity) {
-            if (activity is DeathActivity) return
+            if (activity is VenomActivity) return
             // cancel the suicide and let the activity give up
             handler.removeCallbacksAndMessages(null)
             handler.post { handler.post(venomousRunnable) }
@@ -120,9 +120,15 @@ internal class DeathActivity : Activity() {
     companion object {
         private const val DELAY_TIMEOUT_MILLIS = 1000L // 1s
 
-        fun launch(context: Context) {
-            val intent = Intent(context, DeathActivity::class.java)
+        fun launchToRestart(context: Context) {
+            val intent = Intent(context, VenomActivity::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        }
+
+        fun launchToKill(context: Context) {
+            val intent = Intent(context, VenomActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_TASK_ON_HOME)
             context.startActivity(intent)
         }
     }

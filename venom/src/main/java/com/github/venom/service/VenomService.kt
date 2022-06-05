@@ -28,7 +28,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import com.github.venom.CompositionRoot
-import com.github.venom.DeathActivity
+import com.github.venom.VenomActivity
 import com.github.venom.VenomPreferenceManager
 
 internal class VenomService : Service() {
@@ -49,13 +49,19 @@ internal class VenomService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_CANCEL -> cancelAndTerminate()
-            ACTION_KILL -> launchDeath()
+            ACTION_KILL -> launchKill()
+            ACTION_RESTART -> launchDeath()
         }
         return START_NOT_STICKY
     }
 
+    private fun launchKill() {
+        VenomActivity.launchToKill(this)
+        stopSelf()
+    }
+
     private fun launchDeath() {
-        DeathActivity.launch(this)
+        VenomActivity.launchToRestart(this)
         stopSelf()
     }
 
@@ -67,6 +73,7 @@ internal class VenomService : Service() {
     companion object {
         private const val NOTIFICATION_ID = 200
         const val ACTION_KILL = "action_kill"
+        const val ACTION_RESTART = "action_restart"
         const val ACTION_CANCEL = "action_cancel"
     }
 }

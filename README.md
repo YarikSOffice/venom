@@ -43,6 +43,7 @@ Use the builder to customize the notification:
 ```kotlin
 val notification = NotificationConfig.Builder(this)
     .buttonCancel(R.string.venom_notification_button_cancel_override)
+    .buttonRestart(getString(R.string.venom_notification_button_restart_override))
     .buttonKill(getString(R.string.venom_notification_button_kill_override))
     .build()   
 venom.initialize(notification)

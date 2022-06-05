@@ -30,7 +30,7 @@
 
     <application>
         <activity
-            android:name="com.github.venom.DeathActivity"
+            android:name="com.github.venom.VenomActivity"
             android:process=":venom.test" />
         <activity
             android:name="com.github.venom.test.VenomTestActivity"
