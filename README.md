@@ -51,6 +51,7 @@ venom.initialize(notification)
 ## Notification Permission
 
 Android 13 has introduced a new runtime permission [`POST_NOTIFICATIONS`](https://developer.android.com/reference/android/Manifest.permission#POST_NOTIFICATIONS) which is required to display any kind of notifications including ones for foreground services. Note that this permission is required for Venom to function properly.
+
 Venom **doesn't** manage the notification permission on your behalf to keep the library flexible. Please, see an example of handling that in the sample app.
 
 
