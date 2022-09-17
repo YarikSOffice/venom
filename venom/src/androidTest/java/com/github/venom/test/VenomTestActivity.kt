@@ -39,7 +39,8 @@ class VenomTestActivity : Activity() {
         super.onCreate(savedInstanceState)
         processedInput = savedInstanceState?.getBoolean(PROCESSED_INPUT_KEY) ?: false
 
-        arg = intent.getSerializableExtra(INPUT_ARG, InputArg::class.java)!!
+        @Suppress("DEPRECATION")
+        arg = intent.getSerializableExtra(INPUT_ARG) as InputArg
         title = TITLE_PREFIX + arg.number
 
         val args = arg.args
