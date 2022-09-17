@@ -24,14 +24,14 @@
 
 buildscript {
     ext {
-        kotlinVersion = "1.6.21"
-        androidGradleVersion = "7.2.1"
+        kotlinVersion = "1.7.10"
+        androidGradleVersion = "7.3.0"
         detektVersion = "1.17.1"
         ktlintVersion = "0.41.0"
         ktlintGradleVersion = "10.1.0"
 
-        appCompatVersion = "1.4.2"
-        androidXCoreVersion = "1.8.0"
+        appCompatVersion = "1.5.1"
+        androidXCoreVersion = "1.9.0"
         constraintLayoutVersion = "2.1.4"
 
         junitVersion = "4.13.2"
@@ -41,8 +41,8 @@ buildscript {
         uiAutomatorVersion = "2.2.0"
 
         minSdkVersion = 14
-        targetSdkVersion = 31
-        compileSdkVersion = 31
+        targetSdkVersion = 33
+        compileSdkVersion = 33
         versionName = "0.5.0"
     }
     repositories {

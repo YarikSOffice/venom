@@ -292,6 +292,7 @@ class VenomTest {
     }
 
     private fun collapseNotifications() {
+        @Suppress("DEPRECATION") // still eligible for tests
         appContext.sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
     }
 
