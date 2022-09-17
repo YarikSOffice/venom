@@ -29,6 +29,7 @@ package com.github.venom
 import android.content.Context
 import com.github.venom.service.NotificationConfig
 
+@Suppress("UNUSED_PARAMETER")
 class Venom private constructor() {
 
     @JvmOverloads
