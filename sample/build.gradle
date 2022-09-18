@@ -28,9 +28,8 @@ apply from: '../static-analysis.gradle'
 apply from: '../common-android.gradle'
 
 android {
-    defaultConfig {
-        applicationId "com.github.venom.sample"
-    }
+    defaultConfig.applicationId 'com.github.venom.sample'
+    namespace 'com.github.venom.sample'
 }
 
 dependencies {

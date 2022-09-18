@@ -27,6 +27,11 @@ apply plugin: 'kotlin-android'
 apply from: '../static-analysis.gradle'
 apply from: '../common-android.gradle'
 
+android {
+    namespace 'com.github.venom'
+    testNamespace 'com.github.venom.test'
+}
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "androidx.core:core-ktx:$androidXCoreVersion"
