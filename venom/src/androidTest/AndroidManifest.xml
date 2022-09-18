@@ -29,6 +29,9 @@
 
     <application>
         <activity
+            android:name="com.github.venom.VenomActivity$Kill"
+            android:process=":venom.test" />
+        <activity
             android:name="com.github.venom.VenomActivity$Restart"
             android:process=":venom.test" />
         <activity

@@ -39,6 +39,7 @@ buildscript {
         androidXTestVersion = "1.4.0"
         androidXTestExtVersion = "1.1.3"
         uiAutomatorVersion = "2.2.0"
+        testParameterInjector = "1.8"
 
         minSdkVersion = 14
         targetSdkVersion = 33

@@ -25,17 +25,26 @@
 package com.github.venom.test
 
 import android.app.ActivityManager
+import android.app.Application
+import android.content.ComponentName
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
-import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.core.content.getSystemService
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.github.venom.Venom
+import com.github.venom.test.VenomTest.Action.Kill
+import com.github.venom.test.VenomTest.Action.Restart
+import com.github.venom.test.VenomTest.Behavior.Default
+import com.github.venom.test.VenomTest.Behavior.LongSaveState
+import com.github.venom.test.VenomTest.Behavior.LongStop
+import com.github.venom.test.VenomTest.State.Background
 import com.github.venom.test.VenomTestActivity.Companion.InputArg
+import com.google.testing.junit.testparameterinjector.TestParameter
+import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -43,14 +52,29 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
+@Suppress("unused")
+@RunWith(TestParameterInjector::class)
 @RequiresApi(18)
 class VenomTest {
 
     private val instrumentation = InstrumentationRegistry.getInstrumentation()
     private val device = UiDevice.getInstance(instrumentation)
-    private val appContext = instrumentation.targetContext
+    private val appContext = instrumentation.targetContext.applicationContext as Application
+
+    @Suppress("DEPRECATION")
+    private val testActivity = appContext.packageManager.getActivityInfo(ComponentName(appContext, VenomTestActivity::class.java), 0)
     private val venom = Venom.createInstance(appContext)
+
+    enum class Backstack(val count: Int) {
+        Single(1),
+        Multiple(MULTIPLE_ACTIVITY_COUNT),
+    }
+
+    enum class Behavior { Default, LongStop, LongSaveState }
+
+    enum class Action { Restart, Kill }
+
+    enum class State { Foreground, Background, }
 
     @Before
     fun setupEach() {
@@ -64,92 +88,23 @@ class VenomTest {
     }
 
     @Test
-    fun suicide_oneActivityInForeground() {
-        launchActivities(count = 1)
-        commitSuicide()
-        assertActivities(count = 1)
-    }
-
-    @Test
-    fun suicide_oneActivityInBackground() {
-        launchActivities(count = 1)
-        moveToBackgroundAndCommitSuicide()
-        assertActivities(count = 1)
-    }
-
-    @Test
-    fun suicide_oneActivityInForegroundWithLongStop() {
-        launchActivities(count = 1, longStop = true)
-        commitSuicide()
-        assertActivities(count = 1)
-    }
-
-    @Test
-    fun suicide_oneActivityInBackgroundWithLongStop() {
-        launchActivities(count = 1, longStop = true)
-        moveToBackgroundAndCommitSuicide()
-        assertActivities(count = 1)
-    }
-
-    @Test
-    fun suicide_oneActivityInForegroundWithLongSaveState() {
-        launchActivities(count = 1, longSaveState = true)
-        commitSuicide()
-        assertActivities(count = 1)
-    }
-
-    @Test
-    fun suicide_oneActivityInBackgroundWithLongSaveState() {
-        launchActivities(count = 1, longSaveState = true)
-        moveToBackgroundAndCommitSuicide()
-        assertActivities(count = 1)
-    }
-
-    @Test
-    fun suicide_multipleActivityInForeground() {
-        launchActivities(count = MULTIPLE_ACTIVITY_COUNT)
-        commitSuicide()
-        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
-    }
-
-    @Test
-    fun suicide_multipleActivityInBackground() {
-        launchActivities(count = MULTIPLE_ACTIVITY_COUNT)
-        moveToBackgroundAndCommitSuicide()
-        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
-    }
-
-    @Test
-    fun suicide_multipleActivityInForegroundWithLongStop() {
-        launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longStop = true)
-        commitSuicide()
-        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
-    }
-
-    @Test
-    fun suicide_multipleActivityInBackgroundWithLongStop() {
-        launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longStop = true)
-        moveToBackgroundAndCommitSuicide()
-        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
-    }
-
-    @Test
-    fun suicide_multipleActivityInForegroundWithLongSaveState() {
-        launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longSaveState = true)
-        commitSuicide()
-        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
-    }
-
-    @Test
-    fun suicide_multipleActivityInBackgroundWithLongSaveState() {
-        launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longSaveState = true)
-        moveToBackgroundAndCommitSuicide()
-        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
+    fun matrix(
+        @TestParameter backstack: Backstack,
+        @TestParameter state: State,
+        @TestParameter behavior: Behavior,
+        @TestParameter action: Action,
+    ) {
+        launchActivities(backstack, behavior)
+        if (state == Background) device.pressHome()
+        if (action == Restart) restart()
+        if (action == Kill) kill()
+        assertActivities(backstack, action)
+        if (action == Kill) assertProcessDeath()
     }
 
     @Test
     fun stop_oneActivityInForeground_cancelNotification() {
-        launchActivities(count = 1)
+        launchActivities(Backstack.Single)
         stopVenom()
 
         val cancelBtn = By.desc(appContext.getString(R.string.venom_notification_button_cancel))
@@ -158,17 +113,16 @@ class VenomTest {
     }
 
     private fun launchActivities(
-        @IntRange(from = 1) count: Int,
-        longStop: Boolean = false,
-        longSaveState: Boolean = false
+        backstack: Backstack,
+        behavior: Behavior = Default,
     ) {
         val args = arrayListOf<InputArg>()
-        for (i in 0 until count) {
-            val top = i == count - 1
+        for (i in 0 until backstack.count) {
+            val top = i == backstack.count - 1
             val arg = InputArg(
                 number = i + 1,
-                longStop = longStop && top,
-                longSaveSate = longSaveState && top
+                longStop = behavior == LongStop && top,
+                longSaveSate = behavior == LongSaveState && top
             )
             args.add(arg)
         }
@@ -176,10 +130,10 @@ class VenomTest {
         val rootIntent = VenomTestActivity.launchIntent(context = appContext, arg = rootArg)
             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         appContext.startActivity(rootIntent)
-        device.wait(Until.hasObject(activitySelector(count)), WAIT_TIMEOUT)
+        device.wait(Until.hasObject(activitySelector(backstack.count)), WAIT_TIMEOUT)
     }
 
-    private fun commitSuicide() {
+    private fun restart() {
         val restartBtn = By.desc(appContext.getString(R.string.venom_notification_button_restart))
 
         device.openNotification()
@@ -189,6 +143,15 @@ class VenomTest {
 
         device.wait(Until.gone(activitySelector(activityCount())), WAIT_TIMEOUT)
         device.wait(Until.hasObject(anyActivitySelector), WAIT_TIMEOUT)
+    }
+
+    private fun kill() {
+        val killBtn = By.desc(appContext.getString(R.string.venom_notification_button_kill))
+
+        device.openNotification()
+        device.wait(Until.findObject(killBtn), WAIT_TIMEOUT)
+        device.findObject(killBtn).click()
+        collapseNotifications()
     }
 
     private fun stopVenom() {
@@ -211,18 +174,30 @@ class VenomTest {
     private fun activityCount(): Int {
         val am = appContext.getSystemService(ACTIVITY_SERVICE) as ActivityManager
         val testActivitiesTask = am.getRunningTasks(Int.MAX_VALUE)
-            .firstOrNull { it.baseActivity?.className == VenomTestActivity::class.qualifiedName }
+            .singleOrNull { it.baseActivity?.className == VenomTestActivity::class.qualifiedName }
         return testActivitiesTask?.numActivities ?: 0
     }
 
-    private fun assertActivities(count: Int) {
-        assertEquals("Activity count", count, activityCount())
-        assertTrue("Activity displayed", device.hasObject(activitySelector(count)))
+    private fun assertActivities(backstack: Backstack, action: Action) {
+        assertEquals("Activity count", backstack.count, activityCount())
+        if (action == Restart) assertTrue("Activity displayed", device.hasObject(activitySelector(backstack.count)))
     }
 
-    private fun moveToBackgroundAndCommitSuicide() {
-        device.pressHome()
-        commitSuicide()
+    private fun assertProcessDeath(repeat: Int = 10) {
+        var result: Result<Unit>? = null
+        repeat(repeat) {
+            val am = appContext.getSystemService<ActivityManager>()!!
+            val testProcesses = am.runningAppProcesses.filter { it.processName == testActivity.processName }
+            result = kotlin.runCatching {
+                val message = "Process list must be empty ${testProcesses.map { it.processName }}"
+                assertTrue(message, testProcesses.isEmpty())
+            }.onFailure {
+                Thread.sleep(2 * WAIT_TIMEOUT / repeat)
+            }.onSuccess {
+                return
+            }
+        }
+        result!!.getOrThrow()
     }
 
     companion object {
