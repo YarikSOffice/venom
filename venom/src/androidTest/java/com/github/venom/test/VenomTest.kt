@@ -269,11 +269,11 @@ class VenomTest {
     }
 
     private fun commitSuicide() {
-        val killBtn = By.desc(appContext.getString(R.string.venom_notification_button_kill))
+        val restartBtn = By.desc(appContext.getString(R.string.venom_notification_button_restart))
 
         device.openNotification()
-        device.wait(Until.findObject(killBtn), WAIT_TIMEOUT)
-        device.findObject(killBtn).click()
+        device.wait(Until.findObject(restartBtn), WAIT_TIMEOUT)
+        device.findObject(restartBtn).click()
         collapseNotifications()
 
         device.wait(Until.gone(activitySelector(activityCount())), WAIT_TIMEOUT)
