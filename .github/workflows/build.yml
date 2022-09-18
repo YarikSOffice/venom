@@ -44,4 +44,4 @@ jobs:
           java-version: 11
 
       - name: Run all device checks
-        run: ./gradlew pixel2api30Check --stacktrace
+        run: ./gradlew pixel2api30Check -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" --stacktrace
