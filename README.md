@@ -9,6 +9,11 @@
 
 **Venom** is a lightweight tool that simplifies testing of the process death scenario for your android application. 
 
+<details>
+    <summary>🎞️ Click to show the preview…</summary>
+    <img src="preview/preview.gif" width="300">
+</details>
+
 ## Why Venom?
 
 The Android Run Time aggressively manages its resources and occasionally terminates background applications while the user is away interacting with other apps. In such a case, all the activities are destroyed along with application scope objects and background tasks. 
