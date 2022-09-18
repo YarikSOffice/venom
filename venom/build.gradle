@@ -36,9 +36,9 @@ android {
         animationsDisabled = true
         managedDevices {
             devices {
-                pixel2api29(ManagedVirtualDevice) {
+                pixel2api30(ManagedVirtualDevice) {
                     device = 'Pixel 2'
-                    apiLevel = 29
+                    apiLevel = 30
                     systemImageSource = 'aosp'
                 }
             }
