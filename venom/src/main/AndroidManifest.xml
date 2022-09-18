@@ -30,8 +30,7 @@
     <application>
         <activity
             android:name=".VenomActivity$Restart"
-            android:theme="@style/VenomDeath"
-            android:taskAffinity="com.github.venom.kill" />
+            android:theme="@style/VenomDeath" />
         <activity
             android:name=".VenomActivity$Kill"
             android:allowTaskReparenting="true"
