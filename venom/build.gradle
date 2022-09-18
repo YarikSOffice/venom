@@ -30,14 +30,16 @@ apply from: '../static-analysis.gradle'
 apply from: '../common-android.gradle'
 
 android {
+    namespace 'com.github.venom'
+    testNamespace 'com.github.venom.test'
     testOptions {
         animationsDisabled = true
         managedDevices {
             devices {
                 pixel2api29(ManagedVirtualDevice) {
-                    device = "Pixel 2"
+                    device = 'Pixel 2'
                     apiLevel = 29
-                    systemImageSource = "aosp"
+                    systemImageSource = 'aosp'
                 }
             }
         }
