@@ -27,6 +27,8 @@ apply plugin: 'kotlin-android'
 apply from: '../common-android.gradle'
 apply from: '../static-analysis.gradle'
 
+android.namespace 'com.github.venom'
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }
