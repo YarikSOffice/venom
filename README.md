@@ -9,6 +9,11 @@
 
 **Venom** is a lightweight tool that simplifies testing of the process death scenario for your android application. 
 
+<details>
+    <summary>🎞️ Click to show the preview…</summary>
+    <img src="preview/preview.gif" width="300">
+</details>
+
 ## Why Venom?
 
 The Android Run Time aggressively manages its resources and occasionally terminates background applications while the user is away interacting with other apps. In such a case, all the activities are destroyed along with application scope objects and background tasks. 
@@ -48,6 +53,12 @@ val notification = NotificationConfig.Builder(this)
     .build()   
 venom.initialize(notification)
 ```
+
+## Notification Permission
+
+Android 13 has introduced a new runtime permission [`POST_NOTIFICATIONS`](https://developer.android.com/reference/android/Manifest.permission#POST_NOTIFICATIONS) which is required to display any kind of notifications including ones for foreground services. Note that this permission is required for Venom to function properly.
+
+Venom **doesn't** manage the notification permission on your behalf to keep the library flexible. Please, see an example of handling that in the sample app.
 
 
 ## Download
