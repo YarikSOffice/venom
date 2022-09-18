@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.ManagedVirtualDevice
+
 /*
  * The MIT License (MIT)
  *
@@ -26,6 +28,21 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply from: '../static-analysis.gradle'
 apply from: '../common-android.gradle'
+
+android {
+    testOptions {
+        animationsDisabled = true
+        managedDevices {
+            devices {
+                pixel2api29(ManagedVirtualDevice) {
+                    device = "Pixel 2"
+                    apiLevel = 29
+                    systemImageSource = "aosp"
+                }
+            }
+        }
+    }
+}
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"

@@ -44,7 +44,4 @@ jobs:
           java-version: 11
 
       - name: Run all device checks
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: ./gradlew connectedCheck --stacktrace
+        run: ./gradlew pixel2api29DebugAndroidTest --stacktrace
