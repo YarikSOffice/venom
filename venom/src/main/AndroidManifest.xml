@@ -33,6 +33,8 @@
             android:theme="@style/VenomDeath"
             android:taskAffinity="com.github.venom.kill"
             android:excludeFromRecents="true" />
+
+        <service android:name=".service.VenomService" />
     </application>
 
 </manifest>
