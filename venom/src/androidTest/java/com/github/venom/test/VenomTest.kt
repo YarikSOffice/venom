@@ -25,7 +25,6 @@
 package com.github.venom.test
 
 import android.app.ActivityManager
-import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import androidx.annotation.IntRange
@@ -48,17 +47,13 @@ import org.junit.runner.RunWith
 @RequiresApi(18)
 class VenomTest {
 
-    private lateinit var device: UiDevice
-    private lateinit var appContext: Context
-    private lateinit var venom: Venom
+    private val instrumentation = InstrumentationRegistry.getInstrumentation()
+    private val device = UiDevice.getInstance(instrumentation)
+    private val appContext = instrumentation.targetContext
+    private val venom = Venom.createInstance(appContext)
 
     @Before
     fun setupEach() {
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        device = UiDevice.getInstance(instrumentation)
-        appContext = instrumentation.targetContext
-        venom = Venom.createInstance(appContext)
-
         venom.start()
         collapseNotifications()
     }
@@ -69,171 +64,87 @@ class VenomTest {
     }
 
     @Test
-    fun suicide_oneActivityInForeground_sameActivityCount() {
+    fun suicide_oneActivityInForeground() {
         launchActivities(count = 1)
         commitSuicide()
-        assertEquals(1, activityCount())
+        assertActivities(count = 1)
     }
 
     @Test
-    fun suicide_oneActivityInForeground_topRestored() {
-        launchActivities(count = 1)
-        commitSuicide()
-        assertTrue(device.hasObject(activitySelector(1)))
-    }
-
-    @Test
-    fun suicide_oneActivityInBackground_sameActivityCount() {
+    fun suicide_oneActivityInBackground() {
         launchActivities(count = 1)
         moveToBackgroundAndCommitSuicide()
-        assertEquals(1, activityCount())
+        assertActivities(count = 1)
     }
 
     @Test
-    fun suicide_oneActivityInBackground_topRestored() {
-        launchActivities(count = 1)
-        moveToBackgroundAndCommitSuicide()
-        assertTrue(device.hasObject(activitySelector(1)))
-    }
-
-    @Test
-    fun suicide_oneActivityInForegroundWithLongStop_sameActivityCount() {
+    fun suicide_oneActivityInForegroundWithLongStop() {
         launchActivities(count = 1, longStop = true)
         commitSuicide()
-        assertEquals(1, activityCount())
+        assertActivities(count = 1)
     }
 
     @Test
-    fun suicide_oneActivityInForegroundWithLongStop_topRestored() {
-        launchActivities(count = 1, longStop = true)
-        commitSuicide()
-        assertTrue(device.hasObject(activitySelector(1)))
-    }
-
-    @Test
-    fun suicide_oneActivityInBackgroundWithLongStop_sameActivityCount() {
+    fun suicide_oneActivityInBackgroundWithLongStop() {
         launchActivities(count = 1, longStop = true)
         moveToBackgroundAndCommitSuicide()
-        assertEquals(1, activityCount())
+        assertActivities(count = 1)
     }
 
     @Test
-    fun suicide_oneActivityInBackgroundWithLongStop_topRestored() {
-        launchActivities(count = 1, longStop = true)
-        moveToBackgroundAndCommitSuicide()
-        assertTrue(device.hasObject(activitySelector(1)))
-    }
-
-    @Test
-    fun suicide_oneActivityInForegroundWithLongSaveState_sameActivityCount() {
+    fun suicide_oneActivityInForegroundWithLongSaveState() {
         launchActivities(count = 1, longSaveState = true)
         commitSuicide()
-        assertEquals(1, activityCount())
+        assertActivities(count = 1)
     }
 
     @Test
-    fun suicide_oneActivityInForegroundWithLongSaveState_topRestored() {
-        launchActivities(count = 1, longSaveState = true)
-        commitSuicide()
-        assertTrue(device.hasObject(activitySelector(1)))
-    }
-
-    @Test
-    fun suicide_oneActivityInBackgroundWithLongSaveState_sameActivityCount() {
+    fun suicide_oneActivityInBackgroundWithLongSaveState() {
         launchActivities(count = 1, longSaveState = true)
         moveToBackgroundAndCommitSuicide()
-        assertEquals(1, activityCount())
+        assertActivities(count = 1)
     }
 
     @Test
-    fun suicide_oneActivityInBackgroundWithLongSaveState_topRestored() {
-        launchActivities(count = 1, longSaveState = true)
-        moveToBackgroundAndCommitSuicide()
-        assertTrue(device.hasObject(activitySelector(1)))
-    }
-
-    @Test
-    fun suicide_multipleActivityInForeground_sameActivityCount() {
+    fun suicide_multipleActivityInForeground() {
         launchActivities(count = MULTIPLE_ACTIVITY_COUNT)
         commitSuicide()
-        assertEquals(MULTIPLE_ACTIVITY_COUNT, activityCount())
+        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
     }
 
     @Test
-    fun suicide_multipleActivityInForeground_topRestored() {
-        launchActivities(count = MULTIPLE_ACTIVITY_COUNT)
-        commitSuicide()
-        assertTrue(device.hasObject(activitySelector(MULTIPLE_ACTIVITY_COUNT)))
-    }
-
-    @Test
-    fun suicide_multipleActivityInBackground_sameActivityCount() {
+    fun suicide_multipleActivityInBackground() {
         launchActivities(count = MULTIPLE_ACTIVITY_COUNT)
         moveToBackgroundAndCommitSuicide()
-        assertEquals(MULTIPLE_ACTIVITY_COUNT, activityCount())
+        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
     }
 
     @Test
-    fun suicide_multipleActivityInBackground_topRestored() {
-        launchActivities(count = MULTIPLE_ACTIVITY_COUNT)
-        moveToBackgroundAndCommitSuicide()
-        assertTrue(device.hasObject(activitySelector(MULTIPLE_ACTIVITY_COUNT)))
-    }
-
-    @Test
-    fun suicide_multipleActivityInForegroundWithLongStop_sameActivityCount() {
+    fun suicide_multipleActivityInForegroundWithLongStop() {
         launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longStop = true)
         commitSuicide()
-        assertEquals(MULTIPLE_ACTIVITY_COUNT, activityCount())
+        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
     }
 
     @Test
-    fun suicide_multipleActivityInForegroundWithLongStop_topRestored() {
-        launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longStop = true)
-        commitSuicide()
-        assertTrue(device.hasObject(activitySelector(MULTIPLE_ACTIVITY_COUNT)))
-    }
-
-    @Test
-    fun suicide_multipleActivityInBackgroundWithLongStop_sameActivityCount() {
+    fun suicide_multipleActivityInBackgroundWithLongStop() {
         launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longStop = true)
         moveToBackgroundAndCommitSuicide()
-        assertEquals(MULTIPLE_ACTIVITY_COUNT, activityCount())
+        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
     }
 
     @Test
-    fun suicide_multipleActivityInBackgroundWithLongStop_topRestored() {
-        launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longStop = true)
-        moveToBackgroundAndCommitSuicide()
-        assertTrue(device.hasObject(activitySelector(MULTIPLE_ACTIVITY_COUNT)))
-    }
-
-    @Test
-    fun suicide_multipleActivityInForegroundWithLongSaveState_sameActivityCount() {
+    fun suicide_multipleActivityInForegroundWithLongSaveState() {
         launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longSaveState = true)
         commitSuicide()
-        assertEquals(MULTIPLE_ACTIVITY_COUNT, activityCount())
+        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
     }
 
     @Test
-    fun suicide_multipleActivityInForegroundWithLongSaveState_topRestored() {
-        launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longSaveState = true)
-        commitSuicide()
-        assertTrue(device.hasObject(activitySelector(MULTIPLE_ACTIVITY_COUNT)))
-    }
-
-    @Test
-    fun suicide_multipleActivityInBackgroundWithLongSaveState_sameActivityCount() {
+    fun suicide_multipleActivityInBackgroundWithLongSaveState() {
         launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longSaveState = true)
         moveToBackgroundAndCommitSuicide()
-        assertEquals(MULTIPLE_ACTIVITY_COUNT, activityCount())
-    }
-
-    @Test
-    fun suicide_multipleActivityInBackgroundWithLongSaveState_topRestored() {
-        launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longSaveState = true)
-        moveToBackgroundAndCommitSuicide()
-        assertTrue(device.hasObject(activitySelector(MULTIPLE_ACTIVITY_COUNT)))
+        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
     }
 
     @Test
@@ -302,6 +213,11 @@ class VenomTest {
         val testActivitiesTask = am.getRunningTasks(Int.MAX_VALUE)
             .firstOrNull { it.baseActivity?.className == VenomTestActivity::class.qualifiedName }
         return testActivitiesTask?.numActivities ?: 0
+    }
+
+    private fun assertActivities(count: Int) {
+        assertEquals("Activity count", count, activityCount())
+        assertTrue("Activity displayed", device.hasObject(activitySelector(count)))
     }
 
     private fun moveToBackgroundAndCommitSuicide() {
