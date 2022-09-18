@@ -37,7 +37,9 @@ internal class DeathActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        application.registerActivityLifecycleCallbacks(SuicidalLifecycleCallbacks())
+        @Suppress("DEPRECATION")
+        val launchMode = intent.getSerializableExtra(LAUNCH_MODE) as LaunchMode
+        application.registerActivityLifecycleCallbacks(SuicidalLifecycleCallbacks(this, launchMode))
     }
 
     override fun onBackPressed() {
@@ -64,12 +66,21 @@ internal class DeathActivity : Activity() {
      * In case we have them, we postpone the suicide until the activity manager service gets
      * the last saved state of such the activities.
      */
-    private class SuicidalLifecycleCallbacks : ActivityLifecycleCallbacks {
+    private class SuicidalLifecycleCallbacks(
+        private val activity: Activity,
+        private val launchMode: LaunchMode
+    ) : ActivityLifecycleCallbacks {
 
         private val handler = Handler(Looper.getMainLooper())
 
         /** Kills the app process. */
-        private val venomousRunnable = Runnable { Process.killProcess(Process.myPid()) }
+        private val venomousRunnable = Runnable {
+            if (launchMode == LaunchMode.KILL) {
+                activity.moveTaskToBack(true)
+                activity.finish()
+            }
+            Process.killProcess(Process.myPid())
+        }
 
         /** Schedules the suicide with a delay when [DeathActivity] resumes. */
         override fun onActivityResumed(activity: Activity) {
@@ -119,11 +130,18 @@ internal class DeathActivity : Activity() {
 
     companion object {
         private const val DELAY_TIMEOUT_MILLIS = 1000L // 1s
+        private const val LAUNCH_MODE = "launch-mode"
 
-        fun launch(context: Context) {
+        fun launch(context: Context, launchMode: LaunchMode) {
             val intent = Intent(context, DeathActivity::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .putExtra(LAUNCH_MODE, launchMode)
             context.startActivity(intent)
         }
+    }
+
+    enum class LaunchMode {
+        RESTART,
+        KILL
     }
 }

@@ -37,6 +37,7 @@ import androidx.core.app.NotificationCompat.Action
 import androidx.core.content.ContextCompat
 import com.github.venom.service.VenomService.Companion.ACTION_CANCEL
 import com.github.venom.service.VenomService.Companion.ACTION_KILL
+import com.github.venom.service.VenomService.Companion.ACTION_RESTART
 
 internal class VenomNotificationManager(private val context: Context) {
 
@@ -59,8 +60,10 @@ internal class VenomNotificationManager(private val context: Context) {
             .setContentText(config.text)
             .setSmallIcon(config.iconRes)
             .setColor(ContextCompat.getColor(context, config.colorRes))
-            .addAction(createAction(ACTION_CANCEL, config.buttonCancel))
             .addAction(createAction(ACTION_KILL, config.buttonKill))
+            .addAction(createAction(ACTION_RESTART, config.buttonRestart))
+            .addAction(createAction(ACTION_CANCEL, config.buttonCancel))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
     }
 

@@ -24,6 +24,7 @@
 
 package com.github.venom.test
 
+import android.Manifest
 import android.app.ActivityManager
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
@@ -31,6 +32,7 @@ import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
@@ -40,12 +42,17 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @RequiresApi(18)
 class VenomTest {
+
+    @get:Rule
+    val mRuntimePermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
 
     private val instrumentation = InstrumentationRegistry.getInstrumentation()
     private val device = UiDevice.getInstance(instrumentation)
@@ -180,11 +187,11 @@ class VenomTest {
     }
 
     private fun commitSuicide() {
-        val killBtn = By.desc(appContext.getString(R.string.venom_notification_button_kill))
+        val restartBtn = By.desc(appContext.getString(R.string.venom_notification_button_restart))
 
         device.openNotification()
-        device.wait(Until.findObject(killBtn), WAIT_TIMEOUT)
-        device.findObject(killBtn).click()
+        device.wait(Until.findObject(restartBtn), WAIT_TIMEOUT)
+        device.findObject(restartBtn).click()
         collapseNotifications()
 
         device.wait(Until.gone(activitySelector(activityCount())), WAIT_TIMEOUT)
