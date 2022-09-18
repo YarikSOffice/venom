@@ -29,10 +29,15 @@
 
     <application>
         <activity
-            android:name=".VenomActivity"
+            android:name=".VenomActivity$Restart"
             android:theme="@style/VenomDeath"
+            android:taskAffinity="com.github.venom.kill" />
+        <activity
+            android:name=".VenomActivity$Kill"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
             android:taskAffinity="com.github.venom.kill"
-            android:excludeFromRecents="true" />
+            android:theme="@style/VenomDeath" />
 
         <service android:name=".service.VenomService" />
     </application>

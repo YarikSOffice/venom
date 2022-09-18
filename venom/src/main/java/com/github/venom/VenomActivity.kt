@@ -33,7 +33,10 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Process
 
-internal class VenomActivity : Activity() {
+internal sealed class VenomActivity : Activity() {
+
+    internal class Kill : VenomActivity()
+    internal class Restart : VenomActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,13 +124,13 @@ internal class VenomActivity : Activity() {
         private const val DELAY_TIMEOUT_MILLIS = 1000L // 1s
 
         fun launchToRestart(context: Context) {
-            val intent = Intent(context, VenomActivity::class.java)
+            val intent = Intent(context, Restart::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         }
 
         fun launchToKill(context: Context) {
-            val intent = Intent(context, VenomActivity::class.java)
+            val intent = Intent(context, Kill::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_TASK_ON_HOME)
             context.startActivity(intent)
         }
