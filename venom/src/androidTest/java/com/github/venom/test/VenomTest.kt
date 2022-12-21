@@ -24,17 +24,16 @@
 
 package com.github.venom.test
 
-import android.Manifest
 import android.app.ActivityManager
 import android.content.ComponentName
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager.ComponentInfoFlags
+import android.os.Build
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
@@ -44,17 +43,14 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
+private const val POST_NOTIFICATIONS = "android.permission.POST_NOTIFICATIONS"
 
 @RunWith(AndroidJUnit4::class)
 @RequiresApi(18)
 class VenomTest {
-
-    @get:Rule
-    val mRuntimePermissionRule: GrantPermissionRule =
-        GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
 
     private val instrumentation = InstrumentationRegistry.getInstrumentation()
     private val device = UiDevice.getInstance(instrumentation)
@@ -63,8 +59,17 @@ class VenomTest {
 
     @Before
     fun setupEach() {
+        grantNotificationsPermission()
         venom.start()
         collapseNotifications()
+    }
+
+    private fun grantNotificationsPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            instrumentation.uiAutomation.executeShellCommand(
+                "pm grant ${appContext.packageName} $POST_NOTIFICATIONS"
+            )
+        }
     }
 
     @After
