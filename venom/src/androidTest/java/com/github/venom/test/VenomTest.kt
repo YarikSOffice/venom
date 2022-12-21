@@ -25,8 +25,10 @@
 package com.github.venom.test
 
 import android.app.ActivityManager
+import android.content.ComponentName
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
+import android.os.Build
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -43,6 +45,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+private const val POST_NOTIFICATIONS = "android.permission.POST_NOTIFICATIONS"
+
 @RunWith(AndroidJUnit4::class)
 @RequiresApi(18)
 class VenomTest {
@@ -54,8 +58,17 @@ class VenomTest {
 
     @Before
     fun setupEach() {
+        grantNotificationsPermission()
         venom.start()
         collapseNotifications()
+    }
+
+    private fun grantNotificationsPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            instrumentation.uiAutomation.executeShellCommand(
+                "pm grant ${appContext.packageName} $POST_NOTIFICATIONS"
+            )
+        }
     }
 
     @After
@@ -64,87 +77,87 @@ class VenomTest {
     }
 
     @Test
-    fun suicide_oneActivityInForeground() {
+    fun suicide_oneActivityInForeground_restart() {
         launchActivities(count = 1)
-        commitSuicide()
-        assertActivities(count = 1)
+        restartProcess()
+        assertDisplayedActivities(count = 1)
     }
 
     @Test
-    fun suicide_oneActivityInBackground() {
+    fun suicide_oneActivityInBackground_restart() {
         launchActivities(count = 1)
-        moveToBackgroundAndCommitSuicide()
-        assertActivities(count = 1)
+        moveToBackgroundAndRestartProcess()
+        assertDisplayedActivities(count = 1)
     }
 
     @Test
-    fun suicide_oneActivityInForegroundWithLongStop() {
+    fun suicide_oneActivityInForegroundWithLongStop_restart() {
         launchActivities(count = 1, longStop = true)
-        commitSuicide()
-        assertActivities(count = 1)
+        restartProcess()
+        assertDisplayedActivities(count = 1)
     }
 
     @Test
-    fun suicide_oneActivityInBackgroundWithLongStop() {
+    fun suicide_oneActivityInBackgroundWithLongStop_restart() {
         launchActivities(count = 1, longStop = true)
-        moveToBackgroundAndCommitSuicide()
-        assertActivities(count = 1)
+        moveToBackgroundAndRestartProcess()
+        assertDisplayedActivities(count = 1)
     }
 
     @Test
-    fun suicide_oneActivityInForegroundWithLongSaveState() {
+    fun suicide_oneActivityInForegroundWithLongSaveState_restart() {
         launchActivities(count = 1, longSaveState = true)
-        commitSuicide()
-        assertActivities(count = 1)
+        restartProcess()
+        assertDisplayedActivities(count = 1)
     }
 
     @Test
-    fun suicide_oneActivityInBackgroundWithLongSaveState() {
+    fun suicide_oneActivityInBackgroundWithLongSaveState_restart() {
         launchActivities(count = 1, longSaveState = true)
-        moveToBackgroundAndCommitSuicide()
-        assertActivities(count = 1)
+        moveToBackgroundAndRestartProcess()
+        assertDisplayedActivities(count = 1)
     }
 
     @Test
-    fun suicide_multipleActivityInForeground() {
+    fun suicide_multipleActivityInForeground_restart() {
         launchActivities(count = MULTIPLE_ACTIVITY_COUNT)
-        commitSuicide()
-        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
+        restartProcess()
+        assertDisplayedActivities(count = MULTIPLE_ACTIVITY_COUNT)
     }
 
     @Test
-    fun suicide_multipleActivityInBackground() {
+    fun suicide_multipleActivityInBackground_restart() {
         launchActivities(count = MULTIPLE_ACTIVITY_COUNT)
-        moveToBackgroundAndCommitSuicide()
-        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
+        moveToBackgroundAndRestartProcess()
+        assertDisplayedActivities(count = MULTIPLE_ACTIVITY_COUNT)
     }
 
     @Test
-    fun suicide_multipleActivityInForegroundWithLongStop() {
+    fun suicide_multipleActivityInForegroundWithLongStop_restart() {
         launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longStop = true)
-        commitSuicide()
-        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
+        restartProcess()
+        assertDisplayedActivities(count = MULTIPLE_ACTIVITY_COUNT)
     }
 
     @Test
-    fun suicide_multipleActivityInBackgroundWithLongStop() {
+    fun suicide_multipleActivityInBackgroundWithLongStop_restart() {
         launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longStop = true)
-        moveToBackgroundAndCommitSuicide()
-        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
+        moveToBackgroundAndRestartProcess()
+        assertDisplayedActivities(count = MULTIPLE_ACTIVITY_COUNT)
     }
 
     @Test
-    fun suicide_multipleActivityInForegroundWithLongSaveState() {
+    fun suicide_multipleActivityInForegroundWithLongSaveState_restart() {
         launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longSaveState = true)
-        commitSuicide()
-        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
+        restartProcess()
+        assertDisplayedActivities(count = MULTIPLE_ACTIVITY_COUNT)
     }
 
     @Test
-    fun suicide_multipleActivityInBackgroundWithLongSaveState() {
+    fun suicide_multipleActivityInBackgroundWithLongSaveState_restart() {
         launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longSaveState = true)
-        moveToBackgroundAndCommitSuicide()
-        assertActivities(count = MULTIPLE_ACTIVITY_COUNT)
+        moveToBackgroundAndRestartProcess()
+        assertDisplayedActivities(count = MULTIPLE_ACTIVITY_COUNT)
     }
 
     @Test
@@ -155,6 +168,90 @@ class VenomTest {
         val cancelBtn = By.desc(appContext.getString(R.string.venom_notification_button_cancel))
         val found = device.wait(Until.hasObject(cancelBtn), WAIT_TIMEOUT)
         assert(found != true)
+    }
+
+    @Test
+    fun suicide_oneActivityInForeground_kill() {
+        launchActivities(count = 1)
+        killProcess()
+        assertProcessDeath()
+    }
+
+    @Test
+    fun suicide_oneActivityInBackground_kill() {
+        launchActivities(count = 1)
+        moveToBackgroundAndKillProcess()
+        assertProcessDeath()
+    }
+
+    @Test
+    fun suicide_oneActivityInForegroundWithLongStop_kill() {
+        launchActivities(count = 1, longStop = true)
+        killProcess()
+        assertProcessDeath()
+    }
+
+    @Test
+    fun suicide_oneActivityInBackgroundWithLongStop_kill() {
+        launchActivities(count = 1, longStop = true)
+        moveToBackgroundAndKillProcess()
+        assertProcessDeath()
+    }
+
+    @Test
+    fun suicide_oneActivityInForegroundWithLongSaveState_kill() {
+        launchActivities(count = 1, longSaveState = true)
+        killProcess()
+        assertProcessDeath()
+    }
+
+    @Test
+    fun suicide_oneActivityInBackgroundWithLongSaveState_kill() {
+        launchActivities(count = 1, longSaveState = true)
+        moveToBackgroundAndKillProcess()
+        assertProcessDeath()
+    }
+
+    @Test
+    fun suicide_multipleActivityInForeground_kill() {
+        launchActivities(count = MULTIPLE_ACTIVITY_COUNT)
+        killProcess()
+        assertProcessDeath()
+    }
+
+    @Test
+    fun suicide_multipleActivityInBackground_kill() {
+        launchActivities(count = MULTIPLE_ACTIVITY_COUNT)
+        moveToBackgroundAndKillProcess()
+        assertProcessDeath()
+    }
+
+    @Test
+    fun suicide_multipleActivityInForegroundWithLongStop_kill() {
+        launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longStop = true)
+        killProcess()
+        assertProcessDeath()
+    }
+
+    @Test
+    fun suicide_multipleActivityInBackgroundWithLongStop_kill() {
+        launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longStop = true)
+        moveToBackgroundAndKillProcess()
+        assertProcessDeath()
+    }
+
+    @Test
+    fun suicide_multipleActivityInForegroundWithLongSaveState_kill() {
+        launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longSaveState = true)
+        killProcess()
+        assertProcessDeath()
+    }
+
+    @Test
+    fun suicide_multipleActivityInBackgroundWithLongSaveState_kill() {
+        launchActivities(count = MULTIPLE_ACTIVITY_COUNT, longSaveState = true)
+        moveToBackgroundAndKillProcess()
+        assertProcessDeath()
     }
 
     private fun launchActivities(
@@ -179,16 +276,25 @@ class VenomTest {
         device.wait(Until.hasObject(activitySelector(count)), WAIT_TIMEOUT)
     }
 
-    private fun commitSuicide() {
+    private fun restartProcess() {
+        val restartBtn = By.desc(appContext.getString(R.string.venom_notification_button_restart))
+
+        device.openNotification()
+        device.wait(Until.findObject(restartBtn), WAIT_TIMEOUT)
+        device.findObject(restartBtn).click()
+        collapseNotifications()
+
+        device.wait(Until.gone(activitySelector(activityCount())), WAIT_TIMEOUT)
+        device.wait(Until.hasObject(anyActivitySelector), WAIT_TIMEOUT)
+    }
+
+    private fun killProcess() {
         val killBtn = By.desc(appContext.getString(R.string.venom_notification_button_kill))
 
         device.openNotification()
         device.wait(Until.findObject(killBtn), WAIT_TIMEOUT)
         device.findObject(killBtn).click()
         collapseNotifications()
-
-        device.wait(Until.gone(activitySelector(activityCount())), WAIT_TIMEOUT)
-        device.wait(Until.hasObject(anyActivitySelector), WAIT_TIMEOUT)
     }
 
     private fun stopVenom() {
@@ -215,17 +321,47 @@ class VenomTest {
         return testActivitiesTask?.numActivities ?: 0
     }
 
-    private fun assertActivities(count: Int) {
+    private fun assertDisplayedActivities(count: Int) {
         assertEquals("Activity count", count, activityCount())
         assertTrue("Activity displayed", device.hasObject(activitySelector(count)))
     }
 
-    private fun moveToBackgroundAndCommitSuicide() {
+    private fun moveToBackgroundAndRestartProcess() {
         device.pressHome()
-        commitSuicide()
+        restartProcess()
+    }
+
+    private fun moveToBackgroundAndKillProcess() {
+        device.pressHome()
+        killProcess()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun assertProcessDeath() {
+        val componentName = ComponentName(appContext, VenomTestActivity::class.java)
+        val testActivity = appContext.packageManager.getActivityInfo(componentName, 0)
+        val am = appContext.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val repeat = PROCESS_DEATH_ASSERT_TIMES
+        var result: Result<Unit>? = null
+        repeat(repeat) {
+            val testProcesses = am.runningAppProcesses
+                .filter { it.processName == testActivity.processName }
+                .map { it.processName }
+            result = runCatching {
+                val message = "Process list must be empty $testProcesses"
+                assertTrue(message, testProcesses.isEmpty())
+            }.onFailure {
+                Thread.sleep(PROCESS_DEATH_ASSERT_DURATION / repeat)
+            }.onSuccess {
+                return
+            }
+        }
+        requireNotNull(result).getOrThrow()
     }
 
     companion object {
+        private const val PROCESS_DEATH_ASSERT_DURATION = 15000L
+        private const val PROCESS_DEATH_ASSERT_TIMES = 10
         private const val WAIT_TIMEOUT = 10000L
         private const val MULTIPLE_ACTIVITY_COUNT = 5
 
