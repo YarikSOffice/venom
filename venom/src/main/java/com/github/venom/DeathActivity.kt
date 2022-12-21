@@ -42,6 +42,7 @@ internal class DeathActivity : Activity() {
         application.registerActivityLifecycleCallbacks(SuicidalLifecycleCallbacks(this, launchMode))
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         // No-op
     }
