@@ -28,7 +28,6 @@ import android.app.ActivityManager
 import android.content.ComponentName
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
-import android.content.pm.PackageManager.ComponentInfoFlags
 import android.os.Build
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
@@ -337,9 +336,10 @@ class VenomTest {
         killProcess()
     }
 
+    @Suppress("DEPRECATION")
     private fun assertProcessDeath() {
         val componentName = ComponentName(appContext, VenomTestActivity::class.java)
-        val testActivity = appContext.packageManager.getActivityInfo(componentName, ComponentInfoFlags.of(0))
+        val testActivity = appContext.packageManager.getActivityInfo(componentName, 0)
         val am = appContext.getSystemService(ACTIVITY_SERVICE) as ActivityManager
         val repeat = PROCESS_DEATH_ASSERT_TIMES
         var result: Result<Unit>? = null
