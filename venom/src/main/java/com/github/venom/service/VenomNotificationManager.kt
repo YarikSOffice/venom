@@ -72,6 +72,7 @@ internal class VenomNotificationManager(private val context: Context) {
             .addAction(createActivityAction(config.buttonRestart, RESTART, ACTIVITY_RESTART_CODE))
             .addAction(createCancelAction())
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setOngoing(true)
             .build()
     }
 
