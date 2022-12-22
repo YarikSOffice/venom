@@ -49,6 +49,7 @@ Use the builder to customize the notification:
 val notification = NotificationConfig.Builder(this)
     .buttonCancel(R.string.venom_notification_button_cancel_override)
     .buttonKill(getString(R.string.venom_notification_button_kill_override))
+    .buttonRestart(getString(R.string.venom_notification_button_restart_override))
     .build()   
 venom.initialize(notification)
 ```
