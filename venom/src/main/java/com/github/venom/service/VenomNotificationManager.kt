@@ -35,9 +35,17 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
 import androidx.core.content.ContextCompat
+import com.github.venom.DeathActivity
+import com.github.venom.DeathActivity.LaunchMode
+import com.github.venom.DeathActivity.LaunchMode.KILL
+import com.github.venom.DeathActivity.LaunchMode.RESTART
 import com.github.venom.service.VenomService.Companion.ACTION_CANCEL
-import com.github.venom.service.VenomService.Companion.ACTION_KILL
-import com.github.venom.service.VenomService.Companion.ACTION_RESTART
+
+private const val ACTIVITY_KILL_CODE = 100
+private const val ACTIVITY_RESTART_CODE = 200
+private const val SERVICE_CANCEL_CODE = 300
+private const val VENOM_NOTIFICATION_CHANNEL_ID = "venom_notification_channel"
+private const val VENOM_NOTIFICATION_CHANNEL_NAME = "Venom"
 
 internal class VenomNotificationManager(private val context: Context) {
 
@@ -60,15 +68,35 @@ internal class VenomNotificationManager(private val context: Context) {
             .setContentText(config.text)
             .setSmallIcon(config.iconRes)
             .setColor(ContextCompat.getColor(context, config.colorRes))
-            .addAction(createAction(ACTION_KILL, config.buttonKill))
-            .addAction(createAction(ACTION_RESTART, config.buttonRestart))
-            .addAction(createAction(ACTION_CANCEL, config.buttonCancel))
+            .addAction(createActivityAction(config.buttonKill, KILL, ACTIVITY_KILL_CODE))
+            .addAction(createActivityAction(config.buttonRestart, RESTART, ACTIVITY_RESTART_CODE))
+            .addAction(createCancelAction())
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
     }
 
-    private fun createAction(action: String, text: String): Action {
-        val intent = Intent(context, VenomService::class.java).setAction(action)
+    private fun createActivityAction(
+        text: String,
+        launchMode: LaunchMode,
+        requestCode: Int
+    ): Action {
+        val intent = DeathActivity.createIntent(context, launchMode)
+        val intentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_ONE_SHOT
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            requestCode,
+            intent,
+            intentFlags
+        )
+        return Action(0, text, pendingIntent)
+    }
+
+    private fun createCancelAction(): Action {
+        val intent = Intent(context, VenomService::class.java).setAction(ACTION_CANCEL)
         val intentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
         } else {
@@ -76,14 +104,10 @@ internal class VenomNotificationManager(private val context: Context) {
         }
         val pendingIntent = PendingIntent.getService(
             context,
-            0,
+            SERVICE_CANCEL_CODE,
             intent,
             intentFlags
         )
-        return Action(0, text, pendingIntent)
-    }
-    companion object {
-        private const val VENOM_NOTIFICATION_CHANNEL_ID = "venom_notification_channel"
-        private const val VENOM_NOTIFICATION_CHANNEL_NAME = "Venom"
+        return Action(0, config.buttonCancel, pendingIntent)
     }
 }
