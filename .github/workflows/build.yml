@@ -54,7 +54,7 @@ jobs:
           java-version: 11
 
       - name: Run all device checks
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: ReactiveCircus/android-emulator-runner@v2.27.0
         with:
           api-level: 29
           script: ./gradlew connectedCheck --stacktrace
