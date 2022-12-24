@@ -28,9 +28,6 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import com.github.venom.CompositionRoot
-import com.github.venom.DeathActivity
-import com.github.venom.DeathActivity.LaunchMode.KILL
-import com.github.venom.DeathActivity.LaunchMode.RESTART
 import com.github.venom.VenomPreferenceManager
 
 internal class VenomService : Service() {
@@ -51,20 +48,8 @@ internal class VenomService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_CANCEL -> cancelAndTerminate()
-            ACTION_KILL -> launchKill()
-            ACTION_RESTART -> launchRestart()
         }
         return START_NOT_STICKY
-    }
-
-    private fun launchRestart() {
-        DeathActivity.launch(this, RESTART)
-        stopSelf()
-    }
-
-    private fun launchKill() {
-        DeathActivity.launch(this, KILL)
-        stopSelf()
     }
 
     private fun cancelAndTerminate() {
@@ -74,8 +59,6 @@ internal class VenomService : Service() {
 
     companion object {
         private const val NOTIFICATION_ID = 200
-        const val ACTION_KILL = "action_kill"
-        const val ACTION_RESTART = "action_restart"
         const val ACTION_CANCEL = "action_cancel"
     }
 }
