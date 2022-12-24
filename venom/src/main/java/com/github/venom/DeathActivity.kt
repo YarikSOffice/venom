@@ -32,11 +32,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Process
+import com.github.venom.service.VenomService
 
 internal class DeathActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        stopService(Intent(this, VenomService::class.java))
         @Suppress("DEPRECATION")
         val launchMode = intent.getSerializableExtra(LAUNCH_MODE) as LaunchMode
         application.registerActivityLifecycleCallbacks(SuicidalLifecycleCallbacks(this, launchMode))
@@ -133,11 +135,10 @@ internal class DeathActivity : Activity() {
         private const val DELAY_TIMEOUT_MILLIS = 1000L // 1s
         private const val LAUNCH_MODE = "launch-mode"
 
-        fun launch(context: Context, launchMode: LaunchMode) {
-            val intent = Intent(context, DeathActivity::class.java)
+        fun createIntent(context: Context, launchMode: LaunchMode): Intent {
+            return Intent(context, DeathActivity::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .putExtra(LAUNCH_MODE, launchMode)
-            context.startActivity(intent)
         }
     }
 
