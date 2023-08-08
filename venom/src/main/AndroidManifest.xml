@@ -30,7 +30,13 @@
         <activity
             android:name=".DeathActivity"
             android:theme="@style/VenomDeath" />
-        <service android:name=".service.VenomService" />
+        <service 
+            android:name=".service.VenomService" 
+            android:foregroundServiceType="specialUse">
+            <property 
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" 
+                android:value="KillProcess"/>
+        </service>
     </application>
 
 </manifest>
