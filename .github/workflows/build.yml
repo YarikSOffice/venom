@@ -28,7 +28,7 @@ jobs:
       - name: Configure JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
 
       - name: Assemble and test
         run: ./gradlew build --stacktrace
@@ -51,7 +51,7 @@ jobs:
       - name: Configure JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
 
       - name: Run all device checks
         uses: reactivecircus/android-emulator-runner@v2
