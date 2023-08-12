@@ -26,9 +26,9 @@ buildscript {
     ext {
         kotlinVersion = "1.7.21"
         androidGradleVersion = "7.3.0"
-        detektVersion = "1.17.1"
-        ktlintVersion = "0.41.0"
-        ktlintGradleVersion = "10.1.0"
+        detektVersion = "1.23.1"
+        ktlintVersion = "0.50.0"
+        ktlintGradleVersion = "11.5.1"
 
         appCompatVersion = "1.5.1"
         androidXCoreVersion = "1.9.0"
