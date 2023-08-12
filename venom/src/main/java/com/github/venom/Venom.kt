@@ -102,9 +102,7 @@ class Venom private constructor(
          */
         @JvmStatic
         fun setGlobalInstance(venom: Venom) {
-            if (instance != null) {
-                throw IllegalStateException("The global instance is already initialized")
-            }
+            check(instance == null) { "The global instance is already initialized" }
             instance = venom
         }
 
@@ -115,7 +113,7 @@ class Venom private constructor(
          */
         @JvmStatic
         fun getGlobalInstance(): Venom {
-            return instance ?: throw IllegalStateException("The global instance is not initialized")
+            return checkNotNull(instance) { "The global instance is not initialized" }
         }
 
         internal fun createInstance(
